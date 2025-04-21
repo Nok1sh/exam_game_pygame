@@ -1,11 +1,47 @@
+import pygame
+from levels import get_level
 from typing import Tuple, List, Dict
-import random
+pygame.init()
 
 
 class WindowParams:
-    WIDTH: int = 1000
-    HEIGHT: int = 800
+    info = pygame.display.Info()
+    WIDTH: int = int(info.current_w*0.8)
+    HEIGHT: int = int(info.current_h*0.8)
+    SCREEN_WIDTH: int = WIDTH
+    SCREEN_HEIGHT: int = HEIGHT
+    # WIDTH: int = 1000
+    # HEIGHT: int = 800
     FPS: int = 60
+    CLOCK = pygame.time.Clock()
+    TIME_ANIMATION_MAGIC_BALL: float = CLOCK.tick(FPS) / 1000
+    SCREEN = pygame.display.set_mode(
+        (WIDTH, HEIGHT)
+    )
+    pygame.display.set_caption('game window')
+
+    @staticmethod
+    def update_screen(size_fullscreen=False):
+        if size_fullscreen:
+            WindowParams.SCREEN = pygame.display.set_mode(
+                (WindowParams.SCREEN_WIDTH, WindowParams.SCREEN_HEIGHT),
+                pygame.FULLSCREEN
+            )
+        else:
+            WindowParams.SCREEN = pygame.display.set_mode(
+                (WindowParams.SCREEN_WIDTH, WindowParams.SCREEN_HEIGHT)
+            )
+
+    @classmethod
+    def get_size(cls):
+        return WindowParams.WIDTH, WindowParams.HEIGHT
+
+
+class ActionParams:
+    DELAY_MAGIC_BALLS: int = 500
+    LAST_MAGIC_BALLS: int = -10
+    RECOVERY_MANA_BAR: int = 3000
+    LAST_MANA_RECOVERED: int = -10
 
 
 class Color:
@@ -36,23 +72,41 @@ class Rooms:
         (0, 0, 0, 1),
         (0, 1, 0, 0),
         (0, 0, 1, 0),
-        (1, 0, 0, 0)
+        (1, 0, 0, 0),
+        (1, 1, 0, 0),
+        (0, 0, 1, 1),
+        (1, 0, 1, 1),
+        (1, 0, 0, 1),
+        (0, 1, 1, 0)
     ]
     COUNT_ROOMS: int = len(rooms)
-    LEVEL_ROOMS: Dict[tuple, int] = {(0, 0): 0,}
-
+    NUMBER_LEVEL: int = 1
+    LEVEL_ROOMS: Dict[tuple, int] = get_level(NUMBER_LEVEL)
     CURRENT_ROOM: Tuple[int, int] = (0, 0)
     GENERATED_ROOM: List[int] = [0]
 
-    # @classmethod
-    # def generate_new_room(cls, index: int):
-    #     print(cls.LEVEL_ROOMS)
-    #     if cls.CURRENT_ROOM in cls.LEVEL_ROOMS.keys():
-    #         return cls.LEVEL_ROOMS[cls.CURRENT_ROOM]
-    #     if len(Rooms.GENERATED_ROOM) != cls.COUNT_ROOMS:
-    #         number_room: int = random.randint(1, cls.COUNT_ROOMS-1)
-    #         while not (cls.rooms[number_room][index] == 1 and number_room not in cls.GENERATED_ROOM):
-    #             number_room: int = random.randint(1, cls.COUNT_ROOMS-1)
-    #         cls.GENERATED_ROOM.append(number_room)
-    #         cls.LEVEL_ROOMS[cls.CURRENT_ROOM] = number_room
-    #         return number_room
+
+class Textures:
+    _loaded = False
+
+    @classmethod
+    def load_all(cls):
+        if cls._loaded:
+            return
+        cls.WALL = pygame.image.load("textures/wall.png").convert()
+        cls.FLOOR = pygame.image.load("textures/floor.png").convert()
+        cls.MAGIC_BALL_BIG = pygame.image.load("textures/magicball_big.png")
+        cls.MAGIC_BALL_SMALL = pygame.image.load("textures/magicball_small.png")
+        cls.MANA_BAR_0 = pygame.image.load("textures/manabar_0.png")
+        cls.MANA_BAR_1 = pygame.image.load("textures/manabar_1.png")
+        cls.MANA_BAR_2 = pygame.image.load("textures/manabar_2.png")
+        cls.MANA_BAR_3 = pygame.image.load("textures/manabar_3.png")
+        cls.MANA_BAR_4 = pygame.image.load("textures/manabar_4.png")
+        cls.MANA_BAR_5 = pygame.image.load("textures/manabar_5.png")
+        cls.HEALTH_BAR_0 = pygame.image.load("textures/healthbar_0.png")
+        cls.HEALTH_BAR_1 = pygame.image.load("textures/healthbar_1.png")
+        cls.HEALTH_BAR_2 = pygame.image.load("textures/healthbar_2.png")
+        cls.HEALTH_BAR_3 = pygame.image.load("textures/healthbar_3.png")
+        #cls.PLAYER = pygame.image.load("player.png").convert_alpha()
+
+        cls._loaded = True

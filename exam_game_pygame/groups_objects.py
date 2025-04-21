@@ -1,113 +1,39 @@
 import pygame
-from objects_ import Player, Walls
-from parameters_game import WindowParams
+from parameters_game import Rooms
+from action_objects import Player, MagicBall
+from interface_objects import ManaBar, HealthBar, ButtonMainMenu
+from room_structures import room_number
+from enemies_on_each_levels import get_enemies_on_level
+
+
+buttons_main_menu_group = pygame.sprite.Group()
 
 player_group = pygame.sprite.Group(
     Player()
 )
 
-def room_number(number: int):
-    if number == 0:  # room with 2 doors on vertical walls
-        group_of_walls = pygame.sprite.Group(
-            Walls(0, 0, WindowParams.WIDTH, 50),
-            Walls(0, WindowParams.HEIGHT-50, WindowParams.WIDTH, 50),
-
-            Walls(0, 50, 50, WindowParams.HEIGHT//2 - 100),
-            Walls(0, 100 + WindowParams.HEIGHT//2, 50, WindowParams.HEIGHT//2),
-
-            Walls(WindowParams.WIDTH-50, 50, 50, WindowParams.HEIGHT // 2 - 100),
-            Walls(WindowParams.WIDTH-50, 100 + WindowParams.HEIGHT // 2, 50, WindowParams.HEIGHT // 2)
-        )
-
-    elif number == 1:  # room with 4 doors on all walls
-        group_of_walls = pygame.sprite.Group(
-            Walls(0, 0, WindowParams.WIDTH // 2 - 100, 50),
-            Walls(100 + WindowParams.WIDTH // 2, 0, WindowParams.WIDTH // 2, 50),
-
-            Walls(0, WindowParams.HEIGHT-50, WindowParams.WIDTH // 2 - 100, 50),
-            Walls(100 + WindowParams.WIDTH // 2, WindowParams.HEIGHT-50, WindowParams.WIDTH // 2, 50),
-
-            Walls(0, 50, 50, WindowParams.HEIGHT // 2 - 100),
-            Walls(0, 100 + WindowParams.HEIGHT // 2, 50, WindowParams.HEIGHT // 2),
-
-            Walls(WindowParams.WIDTH - 50, 50, 50, WindowParams.HEIGHT // 2 - 100),
-            Walls(WindowParams.WIDTH - 50, 100 + WindowParams.HEIGHT // 2, 50, WindowParams.HEIGHT // 2)
-        )
-    elif number == 2:  # room with 3 doors/ one on right vertical wall and two on horizontal walls
-        group_of_walls = pygame.sprite.Group(
-            Walls(0, 0, WindowParams.WIDTH // 2 - 100, 50),
-            Walls(100 + WindowParams.WIDTH // 2, 0, WindowParams.WIDTH // 2, 50),
-
-            Walls(0, WindowParams.HEIGHT-50, WindowParams.WIDTH // 2 - 100, 50),
-            Walls(100 + WindowParams.WIDTH // 2, WindowParams.HEIGHT-50, WindowParams.WIDTH // 2, 50),
-
-            Walls(0, 50, 50, WindowParams.HEIGHT),
-
-            Walls(WindowParams.WIDTH - 50, 50, 50, WindowParams.HEIGHT // 2 - 100),
-            Walls(WindowParams.WIDTH - 50, 100 + WindowParams.HEIGHT // 2, 50, WindowParams.HEIGHT // 2)
-        )
-    elif number == 3:  # room with 2 doors on horizontal doors
-        group_of_walls = pygame.sprite.Group(
-            Walls(0, 0, WindowParams.WIDTH // 2 - 100, 50),
-            Walls(100 + WindowParams.WIDTH // 2, 0, WindowParams.WIDTH // 2, 50),
-
-            Walls(0, WindowParams.HEIGHT-50, WindowParams.WIDTH // 2 - 100, 50),
-            Walls(100 + WindowParams.WIDTH // 2, WindowParams.HEIGHT-50, WindowParams.WIDTH // 2, 50),
-
-            Walls(0, 50, 50, WindowParams.HEIGHT),
-
-            Walls(WindowParams.WIDTH - 50, 50, 50, WindowParams.HEIGHT)
-        )
-    elif number == 4:  # room with 1 door on lower horizontal wall
-        group_of_walls = pygame.sprite.Group(
-            Walls(0, 0, WindowParams.WIDTH, 50),
-
-            Walls(0, WindowParams.HEIGHT-50, WindowParams.WIDTH // 2 - 100, 50),
-            Walls(100 + WindowParams.WIDTH // 2, WindowParams.HEIGHT-50, WindowParams.WIDTH // 2, 50),
-
-            Walls(0, 50, 50, WindowParams.HEIGHT),
-
-            Walls(WindowParams.WIDTH - 50, 50, 50, WindowParams.HEIGHT)
-        )
-    elif number == 5:  # room with 1 door on upper horizontal wall
-        group_of_walls = pygame.sprite.Group(
-            Walls(0, 0, WindowParams.WIDTH // 2 - 100, 50),
-            Walls(100 + WindowParams.WIDTH // 2, 0, WindowParams.WIDTH // 2, 50),
-
-            Walls(0, WindowParams.HEIGHT - 50, WindowParams.WIDTH, 50),
-
-            Walls(0, 50, 50, WindowParams.HEIGHT),
-
-            Walls(WindowParams.WIDTH - 50, 50, 50, WindowParams.HEIGHT)
-        )
-    elif number == 6:  # room with 1 door on right vertical wall
-        group_of_walls = pygame.sprite.Group(
-            Walls(0, 0, WindowParams.WIDTH, 50),
-
-            Walls(0, WindowParams.HEIGHT - 50, WindowParams.WIDTH, 50),
-
-            Walls(0, 50, 50, WindowParams.HEIGHT),
-
-            Walls(WindowParams.WIDTH - 50, 50, 50, WindowParams.HEIGHT // 2 - 100),
-            Walls(WindowParams.WIDTH - 50, 100 + WindowParams.HEIGHT // 2, 50, WindowParams.HEIGHT // 2)
-        )
-    elif number == 7:  # room with 1 door on left vertical wall
-        group_of_walls = pygame.sprite.Group(
-            Walls(0, 0, WindowParams.WIDTH, 50),
-
-            Walls(0, WindowParams.HEIGHT - 50, WindowParams.WIDTH, 50),
-
-            Walls(0, 50, 50, WindowParams.HEIGHT // 2 - 100),
-            Walls(0, 100 + WindowParams.HEIGHT // 2, 50, WindowParams.HEIGHT // 2),
-
-            Walls(WindowParams.WIDTH - 50, 50, 50, WindowParams.HEIGHT)
-        )
-
-    return group_of_walls
 
 def walls_group(number: int):
     walls = room_number(number)
     return walls
 
 
+player = next(iter(player_group))
+magic_balls = pygame.sprite.Group()
+
+
+def add_magic_ball(line_move: str, x: int, y: int):
+    magic_balls.add(
+        MagicBall(x, y, line_move)
+    )
+
+
+bars = pygame.sprite.Group(
+    ManaBar(player),
+    HealthBar(player)
+)
+
+projectiles = pygame.sprite.Group()
+
+enemies_by_room = get_enemies_on_level(Rooms.NUMBER_LEVEL)
 
