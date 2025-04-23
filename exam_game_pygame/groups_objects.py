@@ -1,9 +1,10 @@
 import pygame
 from parameters_game import Rooms
 from action_objects import Player, MagicBall
-from interface_objects import ManaBar, HealthBar, ButtonMainMenu
+from interface_objects import ManaBar, HealthBar, Portal, PortalStand, ButtonMainMenu
 from room_structures import room_number
 from enemies_on_each_levels import get_enemies_on_level
+from structures_on_each_level import get_structures_on_level
 
 
 buttons_main_menu_group = pygame.sprite.Group()
@@ -37,3 +38,12 @@ projectiles = pygame.sprite.Group()
 
 enemies_by_room = get_enemies_on_level(Rooms.NUMBER_LEVEL)
 
+portal_and_stand = get_structures_on_level(Rooms.NUMBER_LEVEL)
+
+portal = pygame.sprite.Group(
+    Portal()
+)
+
+portal_stand = pygame.sprite.Group(
+    PortalStand()
+)

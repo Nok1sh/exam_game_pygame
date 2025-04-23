@@ -1,6 +1,7 @@
 import pygame
 from action_objects import MeleeEnemy, RangeEnemy
 
+
 def get_enemies_on_level(number_level: int):
     if number_level == 1:
         enemies_by_room = {1: pygame.sprite.Group(

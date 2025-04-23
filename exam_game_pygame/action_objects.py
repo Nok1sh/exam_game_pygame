@@ -1,6 +1,6 @@
 import pygame
 import random
-from parameters_game import Color, WindowParams, Rooms, Textures
+from parameters_game import Color, WindowParams, Rooms, Textures, ActionParams
 import time
 import math
 
@@ -146,14 +146,36 @@ class Player(pygame.sprite.Sprite):
                 self.rect.top = wall.rect.bottom
             self.speed_y = 0
 
+    def __update_portal(self, portal):
+        #self.rect.x += self.speed_x
+        collision_x = pygame.sprite.spritecollide(self, portal, False)
+        for obj in collision_x:
+            if self.speed_x > 0:
+                self.rect.right = obj.rect.left
+            elif self.speed_x < 0:
+                self.rect.left = obj.rect.right
+            self.speed_x = 0
+
+        #self.rect.y += self.speed_y
+        collision_y = pygame.sprite.spritecollide(self, portal, False)
+        for obj in collision_y:
+            if self.speed_y > 0:
+                self.rect.bottom = obj.rect.top
+            elif self.speed_y < 0:
+                self.rect.top = obj.rect.bottom
+            self.speed_y = 0
+
     def take_damage(self, damage: float):
         self.health_bar -= damage
         if self.health_bar <= 0:
             self.kill()
 
-    def update(self, walls):
+    def update(self, walls=None, portal=None):
         self.__update_moves_player()
-        self.__update_walls(walls)
+        if walls:
+            self.__update_walls(walls)
+        if portal:
+            self.__update_portal(portal)
 
 
 class MagicBall(pygame.sprite.Sprite):
@@ -211,7 +233,7 @@ class MagicBall(pygame.sprite.Sprite):
     def update(self, walls):
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
-        self.animation_move += WindowParams.TIME_ANIMATION_MAGIC_BALL
+        self.animation_move += ActionParams.TIME_ANIMATION_MAGIC_BALL
         if self.animation_move >= 1 / self.speed_rotation:
             self.animation_move -= 1.0 / self.speed_rotation
             self.swap_image = True
@@ -405,4 +427,3 @@ class Projectile(RangeEnemy, pygame.sprite.Sprite):
             self.kill()
         elif pygame.sprite.spritecollide(self, walls, False):
             self.kill()
-

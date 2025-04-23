@@ -18,10 +18,9 @@ def fullscreen():
 def window_screen():
     WindowParams.update_screen()
     importlib.reload(room_structures)
-    info = pygame.display.Info()
 
 
-def options():
+def options_main_menu():
     buttons_options_group = pygame.sprite.Group(
         ButtonMainMenu('Fullscreen', WindowParams.HEIGHT//2-50, fullscreen),
         ButtonMainMenu(f'Windowed Mode', WindowParams.HEIGHT // 2 + 100, window_screen)
@@ -52,3 +51,36 @@ def options():
             btn.draw(options_screen)
         pygame.display.flip()
 
+
+continue_game = False
+
+
+def continue_game_button():
+    global continue_game
+    continue_game = True
+
+
+def options_in_game():
+    global continue_game
+    continue_game = False
+    buttons_options_group = pygame.sprite.Group(
+        ButtonMainMenu('Продолжить', WindowParams.HEIGHT//2-50, continue_game_button),
+        ButtonMainMenu(f'Выйти из игры', WindowParams.HEIGHT // 2 + 100, pygame.quit)
+    )
+    text_options_group = pygame.sprite.Group(
+        TextOnWindow(WindowParams.WIDTH//2, WindowParams.HEIGHT//2-200, 'Настройки', Color.WHITE)
+    )
+    while True:
+        options_screen.fill(Color.BLACK)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+            for btn in buttons_options_group:
+                btn.type_to_button(event)
+                if continue_game:
+                    return
+        for btn in text_options_group:
+            btn.draw_text(options_screen)
+        for btn in buttons_options_group:
+            btn.draw(options_screen)
+        pygame.display.flip()

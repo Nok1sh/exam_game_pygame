@@ -12,11 +12,9 @@ class WindowParams:
     SCREEN_HEIGHT: int = HEIGHT
     # WIDTH: int = 1000
     # HEIGHT: int = 800
-    FPS: int = 60
-    CLOCK = pygame.time.Clock()
-    TIME_ANIMATION_MAGIC_BALL: float = CLOCK.tick(FPS) / 1000
     SCREEN = pygame.display.set_mode(
-        (WIDTH, HEIGHT)
+        (WIDTH, HEIGHT),
+        pygame.SHOWN
     )
     pygame.display.set_caption('game window')
 
@@ -32,16 +30,16 @@ class WindowParams:
                 (WindowParams.SCREEN_WIDTH, WindowParams.SCREEN_HEIGHT)
             )
 
-    @classmethod
-    def get_size(cls):
-        return WindowParams.WIDTH, WindowParams.HEIGHT
-
 
 class ActionParams:
     DELAY_MAGIC_BALLS: int = 500
     LAST_MAGIC_BALLS: int = -10
     RECOVERY_MANA_BAR: int = 3000
     LAST_MANA_RECOVERED: int = -10
+    FPS: int = 60
+    CLOCK = pygame.time.Clock()
+    TIME_ANIMATION_MAGIC_BALL: float = CLOCK.tick(FPS) / 1000
+    TIME_ANIMATION_PORTAL: float = CLOCK.tick(FPS) / 750
 
 
 class Color:
@@ -95,18 +93,20 @@ class Textures:
             return
         cls.WALL = pygame.image.load("textures/wall.png").convert()
         cls.FLOOR = pygame.image.load("textures/floor.png").convert()
-        cls.MAGIC_BALL_BIG = pygame.image.load("textures/magicball_big.png")
-        cls.MAGIC_BALL_SMALL = pygame.image.load("textures/magicball_small.png")
-        cls.MANA_BAR_0 = pygame.image.load("textures/manabar_0.png")
-        cls.MANA_BAR_1 = pygame.image.load("textures/manabar_1.png")
-        cls.MANA_BAR_2 = pygame.image.load("textures/manabar_2.png")
-        cls.MANA_BAR_3 = pygame.image.load("textures/manabar_3.png")
-        cls.MANA_BAR_4 = pygame.image.load("textures/manabar_4.png")
-        cls.MANA_BAR_5 = pygame.image.load("textures/manabar_5.png")
-        cls.HEALTH_BAR_0 = pygame.image.load("textures/healthbar_0.png")
-        cls.HEALTH_BAR_1 = pygame.image.load("textures/healthbar_1.png")
-        cls.HEALTH_BAR_2 = pygame.image.load("textures/healthbar_2.png")
-        cls.HEALTH_BAR_3 = pygame.image.load("textures/healthbar_3.png")
+        cls.MAGIC_BALL_BIG = pygame.image.load("textures/magicball_big.png").convert_alpha()
+        cls.MAGIC_BALL_SMALL = pygame.image.load("textures/magicball_small.png").convert_alpha()
+        cls.MANA_BAR_0 = pygame.image.load("textures/manabar_0.png").convert_alpha()
+        cls.MANA_BAR_1 = pygame.image.load("textures/manabar_1.png").convert_alpha()
+        cls.MANA_BAR_2 = pygame.image.load("textures/manabar_2.png").convert_alpha()
+        cls.MANA_BAR_3 = pygame.image.load("textures/manabar_3.png").convert_alpha()
+        cls.MANA_BAR_4 = pygame.image.load("textures/manabar_4.png").convert_alpha()
+        cls.MANA_BAR_5 = pygame.image.load("textures/manabar_5.png").convert_alpha()
+        cls.HEALTH_BAR_0 = pygame.image.load("textures/healthbar_0.png").convert_alpha()
+        cls.HEALTH_BAR_1 = pygame.image.load("textures/healthbar_1.png").convert_alpha()
+        cls.HEALTH_BAR_2 = pygame.image.load("textures/healthbar_2.png").convert_alpha()
+        cls.HEALTH_BAR_3 = pygame.image.load("textures/healthbar_3.png").convert_alpha()
+        cls.PORTAL: list = [pygame.image.load(f"textures/portals/portal_{number}.png").convert_alpha() for number in range(1, 17)]
+        cls.PORTAL_STAND = pygame.image.load("textures/portal_stand.png")
         #cls.PLAYER = pygame.image.load("player.png").convert_alpha()
 
         cls._loaded = True

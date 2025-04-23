@@ -2,7 +2,7 @@ import pygame
 from parameters_game import WindowParams, Color, Textures
 from groups_objects import buttons_main_menu_group, ButtonMainMenu
 from game_window import main_game_loop
-from window_options import options
+from window_options import options_main_menu
 pygame.init()
 
 Textures.load_all()
@@ -11,7 +11,7 @@ Textures.load_all()
 def main_menu_loop():
     buttons_main_menu_group.add(
         ButtonMainMenu('Новая игра', 200, main_game_loop),
-        ButtonMainMenu('Параметры', 350, options),
+        ButtonMainMenu('Параметры', 350, options_main_menu),
         ButtonMainMenu('Выход', 500, pygame.quit)
     )
     while True:

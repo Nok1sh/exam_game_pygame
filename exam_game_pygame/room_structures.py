@@ -8,7 +8,6 @@ def room_number(number: int):
     move_horizontal: int = 5
     move_vertical: int = 5
     if number == 0:  # room with 2 doors on vertical walls
-        print(WindowParams.get_size())
         group_of_walls.add(
             Walls(0-move_horizontal, 0-move_vertical, WindowParams.WIDTH + 2*move_horizontal, 50, Textures.WALL),
             Walls(0-move_horizontal, WindowParams.HEIGHT-50 + move_vertical, WindowParams.WIDTH + 2*move_horizontal, 50, Textures.WALL),
@@ -171,4 +170,3 @@ def room_number(number: int):
             Walls(WindowParams.WIDTH - 50 + move_horizontal, 75 + WindowParams.HEIGHT // 2, 50, WindowParams.HEIGHT // 2, Textures.WALL)
         )
     return group_of_walls
-
