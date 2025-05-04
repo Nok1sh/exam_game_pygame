@@ -25,16 +25,26 @@ class Player(pygame.sprite.Sprite):
         self.diagonal_move_rate: float = 0.7071
         self.speed_x: int = 0
         self.speed_y: int = 0
-        self.room = 0
         self.can_change_room: bool = True
         self.time_next_room = time.time()
         self.mana_pool: int = 5
         self.health_bar: int = 3
         self.damage: float = 1.5
         self.is_life: bool = True
+        self.score: int = 0
+
+    def restart_parameters(self) -> None:
+        self.rect.x = WindowParams.WIDTH // 2
+        self.rect.y = WindowParams.HEIGHT // 2
+        self.speed_x: int = 0
+        self.speed_y: int = 0
+        self.mana_pool: int = 5
+        self.health_bar: int = 3
+        self.is_life: bool = True
+        Rooms.restart_parameters()
 
     @staticmethod
-    def __generate_new_room(index: int):
+    def __generate_new_room(index: int) -> int:
         if Rooms.CURRENT_ROOM in Rooms.LEVEL_ROOMS.keys():
             return Rooms.LEVEL_ROOMS[Rooms.CURRENT_ROOM]
         # number_room: int = random.randint(1, Rooms.COUNT_ROOMS-1)
@@ -45,7 +55,7 @@ class Player(pygame.sprite.Sprite):
         # Rooms.LEVEL_ROOMS[Rooms.CURRENT_ROOM] = number_room
         # return number_room
 
-    def __next_room(self, door: str):
+    def __next_room(self, door: str) -> None:
         if door == 'left':  # заходим в предыдущей комнате в правую дверь и выходим из левой
             self.speed_x = 0
             self.rect.left = 5
@@ -71,9 +81,8 @@ class Player(pygame.sprite.Sprite):
             Rooms.CURRENT_ROOM = (x_coord, y_coord + 1)
             number_room: int = self.__generate_new_room(3)
         Rooms.ROOM = number_room
-        self.room += 1
 
-    def __update_moves_player(self):
+    def __update_moves_player(self) -> None:
         moves_player = pygame.key.get_pressed()
         self.speed_x: int = 0
         self.speed_y: int = 0
@@ -107,7 +116,7 @@ class Player(pygame.sprite.Sprite):
             self.speed_y = self.speed_move
             self.line_move = 'bottom'
 
-    def __update_walls(self, walls):
+    def __update_walls(self, walls) -> None:
         size_door = 75
         if time.time() - self.time_next_room > 0.5:
             self.time_next_room = time.time()
@@ -148,7 +157,7 @@ class Player(pygame.sprite.Sprite):
                 self.rect.top = wall.rect.bottom
             self.speed_y = 0
 
-    def __update_portal(self, portal):
+    def __update_portal(self, portal) -> None:
         interaction_player = pygame.key.get_pressed()
         collision_x = pygame.sprite.spritecollide(self, portal, False)
         for obj in collision_x:
@@ -174,18 +183,45 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x = WindowParams.WIDTH // 2
                 self.rect.y = WindowParams.HEIGHT // 2
 
-    def take_damage(self, damage: float):
+    def __update_barrels(self, barrels) -> None:
+        collision_x = pygame.sprite.spritecollide(self, barrels, False)
+        for obj in collision_x:
+            if self.speed_x > 0:
+                self.rect.right = obj.rect.left
+            elif self.speed_x < 0:
+                self.rect.left = obj.rect.right
+            self.speed_x = 0
+
+        collision_y = pygame.sprite.spritecollide(self, barrels, False)
+        for obj in collision_y:
+            if self.speed_y > 0:
+                self.rect.bottom = obj.rect.top
+            elif self.speed_y < 0:
+                self.rect.top = obj.rect.bottom
+            self.speed_y = 0
+
+    def __update_moneys(self, moneys):
+        moneys_collision = pygame.sprite.spritecollide(self, moneys, False)
+        for coin in moneys_collision:
+            if self.rect.collidepoint(coin.rect.center):
+                self.score += coin.score
+                coin.kill()
+
+    def take_damage(self, damage: float) -> None:
         self.health_bar -= damage
         if self.health_bar <= 0:
-            self.kill()
             self.is_life = False
 
-    def update(self, walls=None, portal=None):
+    def update(self, walls=None, portal=None, barrels=None, moneys=None) -> None:
         self.__update_moves_player()
+        if barrels:
+            self.__update_barrels(barrels)
         if walls:
             self.__update_walls(walls)
         if portal:
             self.__update_portal(portal)
+        if moneys:
+            self.__update_moneys(moneys)
 
 
 class MagicBall(pygame.sprite.Sprite):
@@ -211,7 +247,7 @@ class MagicBall(pygame.sprite.Sprite):
         self.current_image: str = 'big'  # small
         self.__change_speed_ball(line_move)
 
-    def __change_speed_ball(self, line_move):
+    def __change_speed_ball(self, line_move) -> None:
         if line_move == 'right':
             self.speed_x = self.speed_move
         elif line_move == 'left':
@@ -233,14 +269,14 @@ class MagicBall(pygame.sprite.Sprite):
             self.speed_x = -self.speed_move * self.diagonal_move_rate
             self.speed_y = self.speed_move * self.diagonal_move_rate
 
-    def __update_walls(self, walls):
+    def __update_walls(self, walls) -> None:
         if not (0 < self.rect.center[0] < WindowParams.WIDTH) or not(0 < self.rect.center[1] < WindowParams.HEIGHT):
             self.kill()
         walls_collision = pygame.sprite.spritecollide(self, walls, False)
         if walls_collision:
             self.kill()
 
-    def update(self, walls):
+    def update(self, walls) -> None:
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
         self.animation_move += ActionParams.TIME_ANIMATION_MAGIC_BALL
@@ -270,6 +306,8 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.Surface([self.width, self.height])
         self.image.fill(Color.RED)
         self.rect = self.image.get_rect()
+        self.x: int = x
+        self.y: int = y
         self.rect.x = x
         self.rect.y = y
         self.speed: int = 3
@@ -279,7 +317,7 @@ class Enemy(pygame.sprite.Sprite):
         self.current_attack_cooldown: float = 50
         self.attack_range: int = 55
 
-    def update(self, player, walls, magic_balls, projectiles):
+    def update(self, player, walls, magic_balls, projectiles, barrels=None) -> None:
         if self.current_health <= 0:
             self.kill()
         if self.current_attack_cooldown > 0:
@@ -287,11 +325,31 @@ class Enemy(pygame.sprite.Sprite):
         self.move_towards_player(player, walls)
         self.check_attack(player, projectiles)
         self.take_damage(magic_balls, player)
+        if barrels:
+            self.__update_barrels(barrels)
 
-    def move_towards_player(self, player, walls):
+    def __update_barrels(self, barrels) -> None:
+        collided_barrels = pygame.sprite.spritecollide(self, barrels, False)
+
+        for barrel in collided_barrels:
+            dx = (self.rect.centerx - barrel.rect.centerx) / (barrel.rect.width / 2)
+            dy = (self.rect.centery - barrel.rect.centery) / (barrel.rect.height / 2)
+
+            if abs(dx) > abs(dy):
+                if dx > 0:
+                    self.rect.left = barrel.rect.right
+                else:
+                    self.rect.right = barrel.rect.left
+            else:
+                if dy > 0:
+                    self.rect.top = barrel.rect.bottom
+                else:
+                    self.rect.bottom = barrel.rect.top
+
+    def move_towards_player(self, player, walls) -> None:
         pass
 
-    def can_move(self, new_x: float, new_y: float, walls):
+    def can_move(self, new_x: float, new_y: float, walls) -> bool:
         new_rect = self.rect.copy()
         new_rect.x = new_x
         new_rect.y = new_y
@@ -301,13 +359,13 @@ class Enemy(pygame.sprite.Sprite):
                 return False
         return True
 
-    def check_attack(self, player, projectiles):
+    def check_attack(self, player, projectiles) -> None:
         pass
 
-    def attack(self, player, distance_x: float, distance_y: float, projectiles):
+    def attack(self, player, distance_x: float, distance_y: float, projectiles) -> None:
         pass
 
-    def take_damage(self, magic_balls, player):
+    def take_damage(self, magic_balls, player) -> None:
         balls_collision = pygame.sprite.spritecollide(self, magic_balls, True)
         if balls_collision:
             self.current_health -= player.damage
@@ -325,7 +383,7 @@ class MeleeEnemy(Enemy, pygame.sprite.Sprite):
         self.attack_damage: float = 0.5
         self.attack_range: int = 55
 
-    def move_towards_player(self, player, walls):
+    def move_towards_player(self, player, walls) -> None:
         distance_x: int = player.rect.x - self.rect.x
         distance_y: int = player.rect.y - self.rect.y
         distance: float = math.sqrt(distance_x**2 + distance_y**2)
@@ -345,14 +403,14 @@ class MeleeEnemy(Enemy, pygame.sprite.Sprite):
                 self.rect.x = int(new_x)
                 self.rect.y = int(new_y)
 
-    def check_attack(self, player, projectiles):
+    def check_attack(self, player, projectiles) -> None:
         distance_x: int = player.rect.x - self.rect.x
         distance_y: int = player.rect.y - self.rect.y
         distance: float = math.sqrt(distance_x ** 2 + distance_y ** 2)
         if distance <= self.attack_range and self.current_attack_cooldown <= 0:
             self.attack(player, distance_x, distance_y, projectiles)
 
-    def attack(self, player, distance_x: float, distance_y: float, projectiles):
+    def attack(self, player, distance_x: float, distance_y: float, projectiles) -> None:
         if self.current_attack_cooldown <= 0:
             player.take_damage(self.attack_damage)
             self.rect.x -= distance_x * self.push_distance
@@ -369,7 +427,7 @@ class RangeEnemy(Enemy, pygame.sprite.Sprite):
         self.attack_cooldown: float = 125
         self.image.fill(Color.PINK)
 
-    def move_towards_player(self, player, walls):
+    def move_towards_player(self, player, walls) -> None:
         distance_x: int = player.rect.x - self.rect.x
         distance_y: int = player.rect.y - self.rect.y
         distance: float = math.sqrt(distance_x ** 2 + distance_y ** 2)
@@ -398,14 +456,14 @@ class RangeEnemy(Enemy, pygame.sprite.Sprite):
             self.rect.x = int(new_x)
             self.rect.y = int(new_y)
 
-    def check_attack(self, player, projectiles):
+    def check_attack(self, player, projectiles) -> None:
         distance_x: int = player.rect.x - self.rect.x
         distance_y: int = player.rect.y - self.rect.y
         distance: float = math.sqrt(distance_x ** 2 + distance_y ** 2)
         if distance <= self.distance_attack and self.current_attack_cooldown <= 0:
             self.attack(player, distance_x, distance_y, projectiles)
 
-    def attack(self, player, distance_x: float, distance_y: float, projectiles):
+    def attack(self, player, distance_x: float, distance_y: float, projectiles) -> None:
         if self.current_attack_cooldown <= 0:
             projectile = Projectile(self.rect.centerx, self.rect.centery, distance_x, distance_y)
             projectiles.add(projectile)
@@ -425,7 +483,7 @@ class Projectile(RangeEnemy, pygame.sprite.Sprite):
         self.velocity_x: float = self.projectile_speed * (distance_x/self.line_attack)
         self.velocity_y: float = self.projectile_speed * (distance_y/self.line_attack)
 
-    def update(self, player, walls):
+    def update(self, player, walls) -> None:
         self.rect.x += self.velocity_x
         self.rect.y += self.velocity_y
         if self.rect.colliderect(player.rect):

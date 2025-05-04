@@ -1,6 +1,6 @@
 import pygame
 from structures_and_parameters.parameters_game import WindowParams, Color
-from objects.interface_objects import TextOnWindow, ButtonMainMenu, ButtonBack
+from objects.interface_objects import TextOnWindowForOptions, ButtonMainMenu, ButtonBack
 import importlib
 from structures_and_parameters import room_structures
 
@@ -28,7 +28,7 @@ def options_main_menu():
         ButtonBack('Back', WindowParams.HEIGHT // 2 + 300, 200)
     )
     text_options_group = pygame.sprite.Group(
-        TextOnWindow(WindowParams.WIDTH//2, WindowParams.HEIGHT//2-200, 'Resolution', Color.WHITE)
+        TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 200, 'Resolution', Color.WHITE)
     )
     while True:
         options_screen.fill(Color.BLACK)
@@ -51,7 +51,8 @@ def options_main_menu():
         pygame.display.flip()
 
 
-continue_game = False
+continue_game: bool = False
+back_to_main_menu: bool = False
 
 
 def continue_game_button():
@@ -59,15 +60,23 @@ def continue_game_button():
     continue_game = True
 
 
+def return_to_main_menu():
+    global back_to_main_menu
+    back_to_main_menu = True
+    WindowParams.FLAG_RETURN_TO_MAIN_MENU = True
+
+
 def options_in_game():
-    global continue_game
+    global continue_game, back_to_main_menu
     continue_game = False
+    back_to_main_menu = False
     buttons_options_group = pygame.sprite.Group(
-        ButtonMainMenu('Продолжить', WindowParams.HEIGHT//2-50, continue_game_button),
-        ButtonMainMenu(f'Выйти из игры', WindowParams.HEIGHT // 2 + 100, pygame.quit)
+        ButtonMainMenu('Продолжить', WindowParams.HEIGHT//2-150, continue_game_button),
+        ButtonMainMenu('Вернуться в главное меню', WindowParams.HEIGHT//2, return_to_main_menu),
+        ButtonMainMenu(f'Выйти из игры', WindowParams.HEIGHT // 2 + 150, pygame.quit)
     )
     text_options_group = pygame.sprite.Group(
-        TextOnWindow(WindowParams.WIDTH//2, WindowParams.HEIGHT//2-200, 'Настройки', Color.WHITE)
+        TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 300, 'Настройки', Color.WHITE)
     )
     while True:
         options_screen.fill(Color.BLACK)
@@ -77,6 +86,8 @@ def options_in_game():
             for btn in buttons_options_group:
                 btn.type_to_button(event)
                 if continue_game:
+                    return
+                if back_to_main_menu:
                     return
         for btn in text_options_group:
             btn.draw_text(options_screen)

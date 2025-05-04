@@ -10,6 +10,7 @@ class WindowParams:
     HEIGHT: int = int(info.current_h*0.8)
     SCREEN_WIDTH: int = WIDTH
     SCREEN_HEIGHT: int = HEIGHT
+    FLAG_RETURN_TO_MAIN_MENU: bool = False
     SCREEN = pygame.display.set_mode(
         (WIDTH, HEIGHT),
         pygame.SHOWN
@@ -37,6 +38,7 @@ class ActionParams:
     FPS: int = 60
     CLOCK = pygame.time.Clock()
     TIME_ANIMATION_MAGIC_BALL: float = CLOCK.tick(FPS) / 1000
+    TIME_ANIMATION_COIN: float = CLOCK.tick(FPS) / 1000
     TIME_ANIMATION_PORTAL: float = CLOCK.tick(FPS) / 750
 
 
@@ -90,6 +92,13 @@ class Rooms:
         Rooms.ROOM = 0
         Rooms.FLAG_SWAP_LEVEL = True
 
+    @staticmethod
+    def restart_parameters():
+        Rooms.ROOM = 0
+        Rooms.NUMBER_LEVEL = 1
+        Rooms.CURRENT_ROOM = (0, 0)
+        Rooms.LEVEL_ROOMS = get_level(Rooms.NUMBER_LEVEL)
+
 
 class Textures:
     _loaded = False
@@ -102,18 +111,20 @@ class Textures:
         cls.FLOOR = pygame.image.load("../exam_game_pygame/textures/floor.png").convert()
         cls.MAGIC_BALL_BIG = pygame.image.load("../exam_game_pygame/textures/magicball_big.png").convert_alpha()
         cls.MAGIC_BALL_SMALL = pygame.image.load("../exam_game_pygame/textures/magicball_small.png").convert_alpha()
-        cls.MANA_BAR_0 = pygame.image.load("../exam_game_pygame/textures/manabar_0.png").convert_alpha()
-        cls.MANA_BAR_1 = pygame.image.load("../exam_game_pygame/textures/manabar_1.png").convert_alpha()
-        cls.MANA_BAR_2 = pygame.image.load("../exam_game_pygame/textures/manabar_2.png").convert_alpha()
-        cls.MANA_BAR_3 = pygame.image.load("../exam_game_pygame/textures/manabar_3.png").convert_alpha()
-        cls.MANA_BAR_4 = pygame.image.load("../exam_game_pygame/textures/manabar_4.png").convert_alpha()
-        cls.MANA_BAR_5 = pygame.image.load("../exam_game_pygame/textures/manabar_5.png").convert_alpha()
-        cls.HEALTH_BAR_0 = pygame.image.load("../exam_game_pygame/textures/healthbar_0.png").convert_alpha()
-        cls.HEALTH_BAR_1 = pygame.image.load("../exam_game_pygame/textures/healthbar_1.png").convert_alpha()
-        cls.HEALTH_BAR_2 = pygame.image.load("../exam_game_pygame/textures/healthbar_2.png").convert_alpha()
-        cls.HEALTH_BAR_3 = pygame.image.load("../exam_game_pygame/textures/healthbar_3.png").convert_alpha()
+        cls.MANA_BAR_0 = pygame.image.load("../exam_game_pygame/textures/manabar/manabar_0.png").convert_alpha()
+        cls.MANA_BAR_1 = pygame.image.load("../exam_game_pygame/textures/manabar/manabar_1.png").convert_alpha()
+        cls.MANA_BAR_2 = pygame.image.load("../exam_game_pygame/textures/manabar/manabar_2.png").convert_alpha()
+        cls.MANA_BAR_3 = pygame.image.load("../exam_game_pygame/textures/manabar/manabar_3.png").convert_alpha()
+        cls.MANA_BAR_4 = pygame.image.load("../exam_game_pygame/textures/manabar/manabar_4.png").convert_alpha()
+        cls.MANA_BAR_5 = pygame.image.load("../exam_game_pygame/textures/manabar/manabar_5.png").convert_alpha()
+        cls.HEALTH_BAR_0 = pygame.image.load("../exam_game_pygame/textures/healthbar/healthbar_0.png").convert_alpha()
+        cls.HEALTH_BAR_1 = pygame.image.load("../exam_game_pygame/textures/healthbar/healthbar_1.png").convert_alpha()
+        cls.HEALTH_BAR_2 = pygame.image.load("../exam_game_pygame/textures/healthbar/healthbar_2.png").convert_alpha()
+        cls.HEALTH_BAR_3 = pygame.image.load("../exam_game_pygame/textures/healthbar/healthbar_3.png").convert_alpha()
+        cls.MONEY_BAR = pygame.image.load("../exam_game_pygame/textures/money_bar.png").convert_alpha()
         cls.PORTAL: list = [pygame.image.load(f"../exam_game_pygame/textures/portals/portal_{number}.png").convert_alpha() for number in range(1, 17)]
         cls.PORTAL_STAND = pygame.image.load("../exam_game_pygame/textures/portal_stand.png")
+        cls.COIN = [pygame.image.load(f"../exam_game_pygame/textures/coin/money_{number}.png").convert_alpha() for number in range(1, 7)]
         #cls.PLAYER = pygame.image.load("player.png").convert_alpha()
 
         cls._loaded = True
