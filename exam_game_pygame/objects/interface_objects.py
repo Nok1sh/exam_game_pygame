@@ -19,13 +19,17 @@ class Walls(pygame.sprite.Sprite):
 
 
 class Doors(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, width: int, height: int):
+    def __init__(self, line: str, x=None, y=None):
         super().__init__()
-        self.image = pygame.Surface([width, height])
-        self.image.fill(Color.BLACK)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.size_door: int = 2
+        self.image = pygame.image.load(f"../exam_game_pygame/textures/door_{line}.png")
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_door, self.image.get_height() // self.size_door))
+        if line == 'vertical':
+            self.rect = self.image.get_rect()
+            self.rect.center = (x, WindowParams.HEIGHT//2)
+        else:
+            self.rect = self.image.get_rect()
+            self.rect.center = (WindowParams.WIDTH//2, y)
 
 
 class Floor:
@@ -94,6 +98,36 @@ class MoneyBar(pygame.sprite.Sprite):
         pass
 
 
+class Tent(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.size_tent: int = 5
+        self.image = pygame.image.load("../exam_game_pygame/textures/store/tent.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_tent, self.image.get_height() // self.size_tent))
+        self.rect = self.image.get_rect()
+        self.rect.center = (WindowParams.WIDTH//2, WindowParams.HEIGHT//2)
+
+
+class Trader(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.size: int = 1
+        self.image = pygame.image.load("../exam_game_pygame/textures/store/steampunk_trader.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size, self.image.get_height() // self.size))
+        self.rect = self.image.get_rect()
+        self.rect.center = ((WindowParams.WIDTH//4)*3-50, WindowParams.HEIGHT//2+100)
+
+
+class StoreMenu(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load("../exam_game_pygame/textures/store/store_menu.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image,
+                                                (self.image.get_width() * 1.5, self.image.get_height() // 1))
+        self.rect = self.image.get_rect()
+        self.rect.center = (WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2)
+
+
 class Portal(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -137,14 +171,35 @@ class Barrel(pygame.sprite.Sprite):
         self.rect.center = (self.x, self.y)
         self.health: int = 2
 
-    def update(self, magic_balls, player, moneys_group) -> None:
+    def update(self, magic_balls, player, moneys_group, potions) -> None:
         collision_magic_balls = pygame.sprite.spritecollide(self, magic_balls, True)
         if collision_magic_balls:
             self.health -= player.damage
             if self.health <= 0:
                 self.kill()
-                if random.random() <= 0.3:
+                chance_drop: float = random.random()
+                if chance_drop <= 0.2:
                     moneys_group.add(Coin(self.x, self.y))
+                elif chance_drop <= 0.4:
+                    potions.add(Potion(self.x, self.y, "health"))
+                elif chance_drop <= 0.7:
+                    potions.add(Potion(self.x, self.y, "mana"))
+
+
+class Column(pygame.sprite.Sprite):
+    def __init__(self, x: int, y: int, random_image):
+        super().__init__()
+        self.size_column: int = 5
+        self.x: int = x
+        self.y: int = y
+        self.random_image = random_image
+        self.image = pygame.image.load(f"../exam_game_pygame/textures/columns/column_{self.random_image}.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_column, self.image.get_height() // self.size_column))
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x, self.y)
+
+    def update(self, magic_balls) -> None:
+        pygame.sprite.spritecollide(self, magic_balls, True)
 
 
 class Coin(pygame.sprite.Sprite):
@@ -167,6 +222,17 @@ class Coin(pygame.sprite.Sprite):
             self.animation_money -= 1.0 / self.speed_rotation
         self.image = Textures.COIN[self.number_image-1]
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size, self.image.get_height() // self.size))
+
+
+class Potion(pygame.sprite.Sprite):
+    def __init__(self, x: int, y: int, name: str):
+        super().__init__()
+        self.name: str = name
+        self.size_potion: int = 20
+        self.image = pygame.image.load(f"../exam_game_pygame/textures/potions/{name}_potion.png")
+        self.image = pygame.transform.scale(self.image,(self.image.get_width() // self.size_potion, self.image.get_height() // self.size_potion))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
 
 
 class Button(pygame.sprite.Sprite):
@@ -193,11 +259,37 @@ class Button(pygame.sprite.Sprite):
         pass
 
 
-class ButtonMainMenu(Button, pygame.sprite.Sprite):
-    def __init__(self, text: str, y: int, button_call):
+class ButtonMenu(Button, pygame.sprite.Sprite):
+    def __init__(self, text: str, y: int, button_call, x=None):
         pygame.sprite.Sprite.__init__(self)
         Button.__init__(self, text=text, y=y, button_call=button_call)
-        self.rect.center = (WindowParams.WIDTH//2, y)
+        self.x: int = x if x else WindowParams.WIDTH//2
+        self.rect.center = (self.x, y)
+
+    def type_to_button(self, event) -> None:
+        if event.type == pygame.MOUSEMOTION:
+            self.hovered = self.rect.collidepoint(event.pos)
+        elif event.type == pygame.MOUSEBUTTONDOWN and self.hovered:
+            self.call()
+
+
+class ButtonAction(Button, pygame.sprite.Sprite):
+    def __init__(self, text: str, y: int, button_call, x=None):
+        pygame.sprite.Sprite.__init__(self)
+        Button.__init__(self, text=text, y=y, button_call=button_call)
+        self.height: int = 60
+        self.width: int = 500
+        self.x: int = x if x else WindowParams.WIDTH//2
+        self.rect.center = (self.x, y)
+        self.FONT = pygame.font.SysFont("arial", 42)
+        self.SMALL_FONT = pygame.font.SysFont("arial", 24)
+
+    def draw(self, surface) -> None:
+        color = Color.DARKER_YELLOW if self.hovered else Color.GRAY
+        pygame.draw.rect(surface, color, self.rect, border_radius=10)
+        text_surf = self.SMALL_FONT.render(self.text, True, Color.WHITE)
+        text_rect = text_surf.get_rect(center=self.rect.center)
+        surface.blit(text_surf, text_rect)
 
     def type_to_button(self, event) -> None:
         if event.type == pygame.MOUSEMOTION:
@@ -222,6 +314,7 @@ class ButtonBack(Button, pygame.sprite.Sprite):
 
 class TextOnWindowForGame(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
+        super().__init__()
         self.x: int = x
         self.y: int = y
 
@@ -232,15 +325,16 @@ class TextOnWindowForGame(pygame.sprite.Sprite):
 
 
 class TextOnWindowForOptions(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, text: str, color: tuple):
+    def __init__(self, x: int, y: int, text: str, color: tuple, size=None):
         super().__init__()
         self.x: int = x
         self.y: int = y
         self.text: str = text
         self.color: tuple = color
+        self.size: int = size if size else 48
 
     def draw_text(self, screen) -> None:
-        style_text = pygame.font.SysFont('arial', 48)
+        style_text = pygame.font.SysFont('arial', self.size)
         text = style_text.render(self.text, 1, self.color)
         position = text.get_rect(center=(self.x, self.y))
         screen.blit(text, position)

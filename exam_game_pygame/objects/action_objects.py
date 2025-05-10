@@ -1,6 +1,9 @@
 import pygame
 import random
-from structures_and_parameters.parameters_game import Color, WindowParams, Rooms, Textures, ActionParams
+from structures_and_parameters.parameters_game import Color, WindowParams, Textures, ActionParams
+from structures_and_parameters.structures_on_each_level import Rooms
+from objects.interface_objects import Coin
+from game_windows.window_options import store_menu
 import time
 import math
 
@@ -10,11 +13,12 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.width: int = 50
         self.height: int = 50
-        self.image = pygame.Surface([self.width, self.height])
-        self.image.fill(Color.VIOLET)
+        #self.image = pygame.Surface([self.width, self.height])
+        self.image = pygame.image.load("../exam_game_pygame/textures/hero/hero.png").convert_alpha()
+        #self.image.fill(Color.VIOLET)
+        self.image = pygame.transform.scale(self.image, (self.image.get_width()//7, self.image.get_height()//7))
         self.rect = self.image.get_rect()
-        self.rect.x = WindowParams.WIDTH // 2
-        self.rect.y = WindowParams.HEIGHT // 2
+        self.rect.center = (WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2)
         self.speed_move: int = 5
         self.move_right = pygame.K_d
         self.move_left = pygame.K_a
@@ -27,19 +31,34 @@ class Player(pygame.sprite.Sprite):
         self.speed_y: int = 0
         self.can_change_room: bool = True
         self.time_next_room = time.time()
-        self.mana_pool: int = 5
-        self.health_bar: int = 3
+        self.max_health: int = 3
+        self.max_mana: int = 5
+        self.mana_pool: int = self.max_mana
+        self.health_bar: float = self.max_health
         self.damage: float = 1.5
         self.is_life: bool = True
         self.score: int = 0
+        self.animation_top = 1
+        self.animation_right_top = 3
+        self.animation_right = 5
+        self.animation_bottom = 7
+        self.animation_left_top = 9
+        self.animation_right_bottom = 11
+        self.animation_left_bottom = 13
+        self.animation_left = 15
+        self.speed_animation = 10
+        self.animation_move = 0
 
     def restart_parameters(self) -> None:
         self.rect.x = WindowParams.WIDTH // 2
         self.rect.y = WindowParams.HEIGHT // 2
         self.speed_x: int = 0
         self.speed_y: int = 0
+        self.speed_move: int = 5
+        self.damage: float = 1.5
         self.mana_pool: int = 5
         self.health_bar: int = 3
+        self.score: int = 0
         self.is_life: bool = True
         Rooms.restart_parameters()
 
@@ -58,25 +77,25 @@ class Player(pygame.sprite.Sprite):
     def __next_room(self, door: str) -> None:
         if door == 'left':  # заходим в предыдущей комнате в правую дверь и выходим из левой
             self.speed_x = 0
-            self.rect.left = 5
+            self.rect.left = 15
             x_coord, y_coord = Rooms.CURRENT_ROOM
             Rooms.CURRENT_ROOM = (x_coord+1, y_coord)
             number_room: int = self.__generate_new_room(0)
         elif door == 'right':  # заходим в предыдущей комнате в левую дверь и выходим из правой
             self.speed_x = 0
-            self.rect.right = WindowParams.WIDTH - 5
+            self.rect.right = WindowParams.WIDTH - 15
             x_coord, y_coord = Rooms.CURRENT_ROOM
             Rooms.CURRENT_ROOM = (x_coord - 1, y_coord)
             number_room: int = self.__generate_new_room(2)
         elif door == 'top':  # заходим в предыдущей комнате в нижнюю дверь и выходим из верхней
             self.speed_y = 0
-            self.rect.top = 5
+            self.rect.top = 15
             x_coord, y_coord = Rooms.CURRENT_ROOM
             Rooms.CURRENT_ROOM = (x_coord, y_coord - 1)
             number_room: int = self.__generate_new_room(1)
         elif door == 'bottom':  # заходим в предыдущей комнате в верхнюю дверь и выходим из нижней
             self.speed_y = 0
-            self.rect.bottom = WindowParams.HEIGHT - 5
+            self.rect.bottom = WindowParams.HEIGHT - 15
             x_coord, y_coord = Rooms.CURRENT_ROOM
             Rooms.CURRENT_ROOM = (x_coord, y_coord + 1)
             number_room: int = self.__generate_new_room(3)
@@ -91,30 +110,92 @@ class Player(pygame.sprite.Sprite):
             self.speed_x = -self.speed_move * self.diagonal_move_rate
             self.speed_y = -self.speed_move * self.diagonal_move_rate
             self.line_move = 'left_top'
+            self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
+            if self.animation_move >= 1 / self.speed_animation:
+                self.animation_move -= 1.0 / self.speed_animation
+                self.image = pygame.image.load(
+                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_left_top}.png").convert_alpha()
+                self.image = pygame.transform.scale(self.image,
+                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.animation_left_top = 10 if self.animation_left_top == 9 else 9
         elif moves_player[self.move_left] and moves_player[self.move_down]:
             self.speed_x = -self.speed_move * self.diagonal_move_rate
             self.speed_y = self.speed_move * self.diagonal_move_rate
             self.line_move = 'left_bottom'
+            self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
+            if self.animation_move >= 1 / self.speed_animation:
+                self.animation_move -= 1.0 / self.speed_animation
+                self.image = pygame.image.load(
+                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_left_bottom}.png").convert_alpha()
+                self.image = pygame.transform.scale(self.image,
+                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.animation_left_bottom = 14 if self.animation_left_bottom == 13 else 13
         elif moves_player[self.move_right] and moves_player[self.move_up]:
             self.speed_x = self.speed_move * self.diagonal_move_rate
             self.speed_y = -self.speed_move * self.diagonal_move_rate
             self.line_move = 'right_top'
+            self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
+            if self.animation_move >= 1 / self.speed_animation:
+                self.animation_move -= 1.0 / self.speed_animation
+                self.image = pygame.image.load(
+                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_right_top}.png").convert_alpha()
+                self.image = pygame.transform.scale(self.image,
+                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.animation_right_top = 4 if self.animation_right_top == 3 else 3
         elif moves_player[self.move_right] and moves_player[self.move_down]:
             self.speed_x = self.speed_move * self.diagonal_move_rate
             self.speed_y = self.speed_move * self.diagonal_move_rate
             self.line_move = 'right_bottom'
+            self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
+            if self.animation_move >= 1 / self.speed_animation:
+                self.animation_move -= 1.0 / self.speed_animation
+                self.image = pygame.image.load(
+                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_right_bottom}.png").convert_alpha()
+                self.image = pygame.transform.scale(self.image,
+                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.animation_right_bottom = 12 if self.animation_right_bottom == 11 else 11
         elif moves_player[self.move_left]:
             self.speed_x = -self.speed_move
             self.line_move = 'left'
+            self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
+            if self.animation_move >= 1 / self.speed_animation:
+                self.animation_move -= 1.0 / self.speed_animation
+                self.image = pygame.image.load(
+                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_left}.png").convert_alpha()
+                self.image = pygame.transform.scale(self.image,
+                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.animation_left = 16 if self.animation_left == 15 else 15
         elif moves_player[self.move_right]:
             self.speed_x = self.speed_move
             self.line_move = 'right'
+            self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
+            if self.animation_move >= 1 / self.speed_animation:
+                self.animation_move -= 1.0 / self.speed_animation
+                self.image = pygame.image.load(f"../exam_game_pygame/textures/hero/hero_move{self.animation_right}.png").convert_alpha()
+                self.image = pygame.transform.scale(self.image,
+                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.animation_right = 6 if self.animation_right == 5 else 5
         elif moves_player[self.move_up]:
             self.speed_y = -self.speed_move
             self.line_move = 'top'
+            self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
+            if self.animation_move >= 1 / self.speed_animation:
+                self.animation_move -= 1.0 / self.speed_animation
+                self.image = pygame.image.load(f"../exam_game_pygame/textures/hero/hero_move{self.animation_top}.png").convert_alpha()
+                self.image = pygame.transform.scale(self.image, (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.animation_top = 2 if self.animation_top == 1 else 1
         elif moves_player[self.move_down]:
             self.speed_y = self.speed_move
             self.line_move = 'bottom'
+            self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
+            if self.animation_move >= 1 / self.speed_animation:
+                print(1)
+                self.animation_move -= 1.0 / self.speed_animation
+                self.image = pygame.image.load(
+                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_bottom}.png").convert_alpha()
+                self.image = pygame.transform.scale(self.image,
+                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.animation_bottom = 8 if self.animation_bottom == 7 else 7
 
     def __update_walls(self, walls) -> None:
         size_door = 75
@@ -183,39 +264,68 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x = WindowParams.WIDTH // 2
                 self.rect.y = WindowParams.HEIGHT // 2
 
-    def __update_barrels(self, barrels) -> None:
-        collision_x = pygame.sprite.spritecollide(self, barrels, False)
-        for obj in collision_x:
-            if self.speed_x > 0:
-                self.rect.right = obj.rect.left
-            elif self.speed_x < 0:
-                self.rect.left = obj.rect.right
-            self.speed_x = 0
+    def __update_structures(self, barrels, flag_tent=False, player=None) -> None:
+        collided_structures = pygame.sprite.spritecollide(self, barrels, False)
 
-        collision_y = pygame.sprite.spritecollide(self, barrels, False)
-        for obj in collision_y:
-            if self.speed_y > 0:
-                self.rect.bottom = obj.rect.top
-            elif self.speed_y < 0:
-                self.rect.top = obj.rect.bottom
-            self.speed_y = 0
+        for barrel in collided_structures:
+            dx = (self.rect.centerx - barrel.rect.centerx) / (barrel.rect.width / 2)
+            dy = (self.rect.centery - barrel.rect.centery) / (barrel.rect.height / 2)
 
-    def __update_moneys(self, moneys):
+            if abs(dx) > abs(dy):
+                if dx > 0:
+                    self.rect.left = barrel.rect.right
+                else:
+                    self.rect.right = barrel.rect.left
+            else:
+                if dy > 0:
+                    self.rect.top = barrel.rect.bottom
+                else:
+                    self.rect.bottom = barrel.rect.top
+            if flag_tent:
+                interaction_player = pygame.key.get_pressed()
+                if interaction_player[self.interaction_with_objects]:
+                    store_menu(player)
+
+    def __update_moneys(self, moneys) -> None:
         moneys_collision = pygame.sprite.spritecollide(self, moneys, False)
         for coin in moneys_collision:
             if self.rect.collidepoint(coin.rect.center):
                 self.score += coin.score
                 coin.kill()
 
+    def __update_potions(self, potion) -> None:
+        potions_collision = pygame.sprite.spritecollide(self, potion, False)
+        for potion in potions_collision:
+            if self.rect.collidepoint(potion.rect.center):
+                if potion.name == "health":
+                    current_health = self.health_bar + 1
+                    if current_health >= self.max_health:
+                        current_health = self.max_health
+                    self.health_bar = current_health
+                elif potion.name == "mana":
+                    current_mana = self.mana_pool + 2
+                    if current_mana >= self.max_mana:
+                        current_mana = self.max_mana
+                    self.mana_pool = current_mana
+                potion.kill()
+
     def take_damage(self, damage: float) -> None:
         self.health_bar -= damage
         if self.health_bar <= 0:
             self.is_life = False
 
-    def update(self, walls=None, portal=None, barrels=None, moneys=None) -> None:
+    def update(self, player, walls=None, portal=None, barrels=None, moneys=None, columns=None, potions=None, tent=None) -> None:
         self.__update_moves_player()
+        if potions:
+            self.__update_potions(potions)
+        if tent:
+            self.__update_structures(tent, flag_tent=True, player=player)
+        if Rooms.DOORS_FLAG:
+            self.__update_structures(Rooms.DOORS)
         if barrels:
-            self.__update_barrels(barrels)
+            self.__update_structures(barrels)
+        if columns:
+            self.__update_structures(columns)
         if walls:
             self.__update_walls(walls)
         if portal:
@@ -225,7 +335,7 @@ class Player(pygame.sprite.Sprite):
 
 
 class MagicBall(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, line_move: str):
+    def __init__(self, center: tuple, line_move: str):
         super().__init__()
         self.speed_x: int = 0
         self.speed_y: int = 0
@@ -239,8 +349,7 @@ class MagicBall(pygame.sprite.Sprite):
         self.image = self.textures_big
         self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_width, self.image.get_height()//self.size_height))
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.center = center
         self.animation_move: float = 0
         self.speed_rotation: int = 5
         self.swap_image: bool = False
@@ -317,16 +426,18 @@ class Enemy(pygame.sprite.Sprite):
         self.current_attack_cooldown: float = 50
         self.attack_range: int = 55
 
-    def update(self, player, walls, magic_balls, projectiles, barrels=None) -> None:
+    def update(self, player, walls, magic_balls, projectiles, moneys_group, barrels=None, columns=None) -> None:
         if self.current_health <= 0:
             self.kill()
         if self.current_attack_cooldown > 0:
             self.current_attack_cooldown -= 1
         self.move_towards_player(player, walls)
         self.check_attack(player, projectiles)
-        self.take_damage(magic_balls, player)
+        self.take_damage(magic_balls, player, moneys_group)
         if barrels:
             self.__update_barrels(barrels)
+        if columns:
+            self.__update_barrels(columns)
 
     def __update_barrels(self, barrels) -> None:
         collided_barrels = pygame.sprite.spritecollide(self, barrels, False)
@@ -365,12 +476,14 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self, player, distance_x: float, distance_y: float, projectiles) -> None:
         pass
 
-    def take_damage(self, magic_balls, player) -> None:
+    def take_damage(self, magic_balls, player, moneys_group) -> None:
         balls_collision = pygame.sprite.spritecollide(self, magic_balls, True)
         if balls_collision:
             self.current_health -= player.damage
             if self.current_health <= 0:
                 self.kill()
+                if random.random() <= 0.2:
+                    moneys_group.add(Coin(self.x, self.y))
 
 
 class MeleeEnemy(Enemy, pygame.sprite.Sprite):
@@ -473,7 +586,6 @@ class RangeEnemy(Enemy, pygame.sprite.Sprite):
 class Projectile(RangeEnemy, pygame.sprite.Sprite):
     def __init__(self, x: int, y: int, distance_x: float, distance_y: float):
         pygame.sprite.Sprite.__init__(self)
-        # RangeEnemy.__init__(self)
         self.attack_damage: float = 1
         self.projectile_speed: float = 7
         self.image = pygame.Surface((15, 15))
@@ -483,7 +595,7 @@ class Projectile(RangeEnemy, pygame.sprite.Sprite):
         self.velocity_x: float = self.projectile_speed * (distance_x/self.line_attack)
         self.velocity_y: float = self.projectile_speed * (distance_y/self.line_attack)
 
-    def update(self, player, walls) -> None:
+    def update(self, current_enemies, player, walls, barrels=None, columns=None) -> None:
         self.rect.x += self.velocity_x
         self.rect.y += self.velocity_y
         if self.rect.colliderect(player.rect):
@@ -492,5 +604,7 @@ class Projectile(RangeEnemy, pygame.sprite.Sprite):
 
         elif not (0 < self.rect.center[0] < WindowParams.WIDTH) or not (0 < self.rect.center[1] < WindowParams.HEIGHT):
             self.kill()
-        elif pygame.sprite.spritecollide(self, walls, False):
+        elif pygame.sprite.spritecollide(self, walls, False) or pygame.sprite.spritecollide(self, barrels, False) or \
+                pygame.sprite.spritecollide(self, columns, False) or not current_enemies:
             self.kill()
+

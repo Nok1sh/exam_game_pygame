@@ -1,6 +1,5 @@
 import pygame
-from structures_and_parameters.levels import get_level
-from typing import Tuple, List, Dict
+from typing import Tuple
 pygame.init()
 
 
@@ -18,7 +17,7 @@ class WindowParams:
     pygame.display.set_caption('game window')
 
     @staticmethod
-    def update_screen(size_fullscreen=False):
+    def update_screen(size_fullscreen=False) -> None:
         if size_fullscreen:
             WindowParams.SCREEN = pygame.display.set_mode(
                 (WindowParams.SCREEN_WIDTH, WindowParams.SCREEN_HEIGHT),
@@ -38,66 +37,25 @@ class ActionParams:
     FPS: int = 60
     CLOCK = pygame.time.Clock()
     TIME_ANIMATION_MAGIC_BALL: float = CLOCK.tick(FPS) / 1000
+    TIME_ANIMATION_HERO_MOVE: float = CLOCK.tick(FPS) / 5000
     TIME_ANIMATION_COIN: float = CLOCK.tick(FPS) / 1000
     TIME_ANIMATION_PORTAL: float = CLOCK.tick(FPS) / 750
 
 
 class Color:
-    WHITE: Tuple[int] = (255, 255, 255)
-    RED: Tuple[int] = (255, 0, 0)
-    GREEN: Tuple[int] = (0, 255, 0)
-    DARK_GREEN: Tuple[int] = (0, 100, 0)
-    BLUE: Tuple[int] = (0, 0, 255)
-    BLACK: Tuple[int] = (0, 0, 0)
-    YELLOW: Tuple[int] = (255, 255, 0)
-    VIOLET: Tuple[int] = (128, 0, 128)
-    ORANGE: Tuple[int] = (255, 165, 0)
-    PINK: Tuple[int] = (255, 192, 203)
-    GRAY: Tuple[int] = (128, 128, 128)
-    TURQUOISE: Tuple[int] = (64, 224, 208)
-
-
-class Rooms:
-    """
-    Комнаты строятся по кортежам, каждый индекс картежа это наличие двери в нужную сторону лево -> вверх -> право -> низ
-    """
-    ROOM: int = 0
-    rooms: List[tuple] = [
-        (1, 0, 1, 0),
-        (1, 1, 1, 1),
-        (0, 1, 1, 1),
-        (0, 1, 0, 1),
-        (0, 0, 0, 1),
-        (0, 1, 0, 0),
-        (0, 0, 1, 0),
-        (1, 0, 0, 0),
-        (1, 1, 0, 0),
-        (0, 0, 1, 1),
-        (1, 0, 1, 1),
-        (1, 0, 0, 1),
-        (0, 1, 1, 0)
-    ]
-    COUNT_ROOMS: int = len(rooms)
-    NUMBER_LEVEL: int = 1
-    LEVEL_ROOMS: Dict[tuple, int] = get_level(NUMBER_LEVEL)
-    CURRENT_ROOM: Tuple[int, int] = (0, 0)
-    GENERATED_ROOM: List[int] = [0]
-    FLAG_SWAP_LEVEL: bool = False
-
-    @staticmethod
-    def update_level():
-        Rooms.NUMBER_LEVEL += 1
-        Rooms.LEVEL_ROOMS = get_level(Rooms.NUMBER_LEVEL)
-        Rooms.CURRENT_ROOM = (0, 0)
-        Rooms.ROOM = 0
-        Rooms.FLAG_SWAP_LEVEL = True
-
-    @staticmethod
-    def restart_parameters():
-        Rooms.ROOM = 0
-        Rooms.NUMBER_LEVEL = 1
-        Rooms.CURRENT_ROOM = (0, 0)
-        Rooms.LEVEL_ROOMS = get_level(Rooms.NUMBER_LEVEL)
+    WHITE: Tuple[int, int, int] = (255, 255, 255)
+    RED: Tuple[int, int, int] = (255, 0, 0)
+    GREEN: Tuple[int, int, int] = (0, 255, 0)
+    DARK_GREEN: Tuple[int, int, int] = (0, 100, 0)
+    BLUE: Tuple[int, int, int] = (0, 0, 255)
+    BLACK: Tuple[int, int, int] = (0, 0, 0)
+    YELLOW: Tuple[int, int, int] = (255, 255, 0)
+    DARKER_YELLOW: Tuple[int, int, int] = (200, 200, 0)
+    VIOLET: Tuple[int, int, int] = (128, 0, 128)
+    ORANGE: Tuple[int, int, int] = (255, 165, 0)
+    PINK: Tuple[int, int, int] = (255, 192, 203)
+    GRAY: Tuple[int, int, int] = (128, 128, 128)
+    TURQUOISE: Tuple[int, int, int] = (64, 224, 208)
 
 
 class Textures:
@@ -125,6 +83,7 @@ class Textures:
         cls.PORTAL: list = [pygame.image.load(f"../exam_game_pygame/textures/portals/portal_{number}.png").convert_alpha() for number in range(1, 17)]
         cls.PORTAL_STAND = pygame.image.load("../exam_game_pygame/textures/portal_stand.png")
         cls.COIN = [pygame.image.load(f"../exam_game_pygame/textures/coin/money_{number}.png").convert_alpha() for number in range(1, 7)]
+        cls.COLUMN = [pygame.image.load(f"../exam_game_pygame/textures/columns/column_{number}.png").convert_alpha() for number in range(1, 7)]
         #cls.PLAYER = pygame.image.load("player.png").convert_alpha()
 
         cls._loaded = True
