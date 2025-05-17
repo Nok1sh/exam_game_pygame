@@ -169,4 +169,17 @@ def room_number(number: int) -> pygame.sprite.Group:
             Walls(WindowParams.WIDTH - 50 + move_horizontal, 50 - move_vertical, 50, WindowParams.HEIGHT // 2 - 75, Textures.WALL),
             Walls(WindowParams.WIDTH - 50 + move_horizontal, 75 + WindowParams.HEIGHT // 2, 50, WindowParams.HEIGHT // 2, Textures.WALL)
         )
+    elif number == 13:  # room with 3 doors/ two on vertical walls and one on upper horizontal wall
+        group_of_walls.add(
+            Walls(0 - move_horizontal, 0 - move_vertical, WindowParams.WIDTH // 2 - 75, 50, Textures.WALL),
+            Walls(75 + WindowParams.WIDTH // 2 + move_horizontal, 0 - move_vertical, WindowParams.WIDTH // 2, 50, Textures.WALL),
+
+            Walls(0 - move_horizontal, WindowParams.HEIGHT - 50 + move_vertical, WindowParams.WIDTH + move_horizontal, 50, Textures.WALL),
+
+            Walls(0 - move_horizontal, 50 - move_vertical, 50, WindowParams.HEIGHT // 2 - 75, Textures.WALL),
+            Walls(0 - move_horizontal, 75 + WindowParams.HEIGHT // 2, 50, WindowParams.HEIGHT // 2, Textures.WALL),
+
+            Walls(WindowParams.WIDTH - 50 + move_horizontal, 50 - move_vertical, 50, WindowParams.HEIGHT // 2 - 75, Textures.WALL),
+            Walls(WindowParams.WIDTH - 50 + move_horizontal, 75 + WindowParams.HEIGHT // 2, 50, WindowParams.HEIGHT // 2, Textures.WALL)
+        )
     return group_of_walls

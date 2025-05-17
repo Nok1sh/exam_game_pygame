@@ -13,10 +13,12 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.width: int = 50
         self.height: int = 50
+        self.size_width: int = 9
+        self.size_height: int = 8
         #self.image = pygame.Surface([self.width, self.height])
         self.image = pygame.image.load("../exam_game_pygame/textures/hero/hero.png").convert_alpha()
         #self.image.fill(Color.VIOLET)
-        self.image = pygame.transform.scale(self.image, (self.image.get_width()//7, self.image.get_height()//7))
+        self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_width, self.image.get_height()//self.size_height))
         self.rect = self.image.get_rect()
         self.rect.center = (WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2)
         self.speed_move: int = 5
@@ -101,6 +103,19 @@ class Player(pygame.sprite.Sprite):
             number_room: int = self.__generate_new_room(3)
         Rooms.ROOM = number_room
 
+    def __swap_image(self, number: int, line: str) -> None:
+        self.image = pygame.image.load(
+            f"../exam_game_pygame/textures/hero/hero_move{number}.png").convert_alpha()
+        if line == "horizontal":
+            self.image = pygame.transform.scale(self.image,
+                                                (self.image.get_width() // self.size_height, self.image.get_height() // self.size_width))
+        elif line == "vertical":
+            self.image = pygame.transform.scale(self.image,
+                                                (self.image.get_width() // self.size_height, self.image.get_height() // self.size_width))
+        else:
+            self.image = pygame.transform.scale(self.image,
+                                                (self.image.get_width() // self.size_width, self.image.get_height() // self.size_width))
+
     def __update_moves_player(self) -> None:
         moves_player = pygame.key.get_pressed()
         self.speed_x: int = 0
@@ -113,10 +128,7 @@ class Player(pygame.sprite.Sprite):
             self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
             if self.animation_move >= 1 / self.speed_animation:
                 self.animation_move -= 1.0 / self.speed_animation
-                self.image = pygame.image.load(
-                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_left_top}.png").convert_alpha()
-                self.image = pygame.transform.scale(self.image,
-                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.__swap_image(self.animation_left_top, "diagonal")
                 self.animation_left_top = 10 if self.animation_left_top == 9 else 9
         elif moves_player[self.move_left] and moves_player[self.move_down]:
             self.speed_x = -self.speed_move * self.diagonal_move_rate
@@ -125,10 +137,7 @@ class Player(pygame.sprite.Sprite):
             self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
             if self.animation_move >= 1 / self.speed_animation:
                 self.animation_move -= 1.0 / self.speed_animation
-                self.image = pygame.image.load(
-                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_left_bottom}.png").convert_alpha()
-                self.image = pygame.transform.scale(self.image,
-                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.__swap_image(self.animation_left_bottom, "diagonal")
                 self.animation_left_bottom = 14 if self.animation_left_bottom == 13 else 13
         elif moves_player[self.move_right] and moves_player[self.move_up]:
             self.speed_x = self.speed_move * self.diagonal_move_rate
@@ -137,10 +146,7 @@ class Player(pygame.sprite.Sprite):
             self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
             if self.animation_move >= 1 / self.speed_animation:
                 self.animation_move -= 1.0 / self.speed_animation
-                self.image = pygame.image.load(
-                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_right_top}.png").convert_alpha()
-                self.image = pygame.transform.scale(self.image,
-                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.__swap_image(self.animation_right_top, "diagonal")
                 self.animation_right_top = 4 if self.animation_right_top == 3 else 3
         elif moves_player[self.move_right] and moves_player[self.move_down]:
             self.speed_x = self.speed_move * self.diagonal_move_rate
@@ -149,10 +155,7 @@ class Player(pygame.sprite.Sprite):
             self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
             if self.animation_move >= 1 / self.speed_animation:
                 self.animation_move -= 1.0 / self.speed_animation
-                self.image = pygame.image.load(
-                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_right_bottom}.png").convert_alpha()
-                self.image = pygame.transform.scale(self.image,
-                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.__swap_image(self.animation_right_bottom, "diagonal")
                 self.animation_right_bottom = 12 if self.animation_right_bottom == 11 else 11
         elif moves_player[self.move_left]:
             self.speed_x = -self.speed_move
@@ -160,10 +163,7 @@ class Player(pygame.sprite.Sprite):
             self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
             if self.animation_move >= 1 / self.speed_animation:
                 self.animation_move -= 1.0 / self.speed_animation
-                self.image = pygame.image.load(
-                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_left}.png").convert_alpha()
-                self.image = pygame.transform.scale(self.image,
-                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.__swap_image(self.animation_left, "horizontal")
                 self.animation_left = 16 if self.animation_left == 15 else 15
         elif moves_player[self.move_right]:
             self.speed_x = self.speed_move
@@ -171,9 +171,7 @@ class Player(pygame.sprite.Sprite):
             self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
             if self.animation_move >= 1 / self.speed_animation:
                 self.animation_move -= 1.0 / self.speed_animation
-                self.image = pygame.image.load(f"../exam_game_pygame/textures/hero/hero_move{self.animation_right}.png").convert_alpha()
-                self.image = pygame.transform.scale(self.image,
-                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.__swap_image(self.animation_right, "horizontal")
                 self.animation_right = 6 if self.animation_right == 5 else 5
         elif moves_player[self.move_up]:
             self.speed_y = -self.speed_move
@@ -181,20 +179,15 @@ class Player(pygame.sprite.Sprite):
             self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
             if self.animation_move >= 1 / self.speed_animation:
                 self.animation_move -= 1.0 / self.speed_animation
-                self.image = pygame.image.load(f"../exam_game_pygame/textures/hero/hero_move{self.animation_top}.png").convert_alpha()
-                self.image = pygame.transform.scale(self.image, (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.__swap_image(self.animation_top, "vertical")
                 self.animation_top = 2 if self.animation_top == 1 else 1
         elif moves_player[self.move_down]:
             self.speed_y = self.speed_move
             self.line_move = 'bottom'
             self.animation_move += ActionParams.TIME_ANIMATION_HERO_MOVE
             if self.animation_move >= 1 / self.speed_animation:
-                print(1)
                 self.animation_move -= 1.0 / self.speed_animation
-                self.image = pygame.image.load(
-                    f"../exam_game_pygame/textures/hero/hero_move{self.animation_bottom}.png").convert_alpha()
-                self.image = pygame.transform.scale(self.image,
-                                                    (self.image.get_width() // 7, self.image.get_height() // 7))
+                self.__swap_image(self.animation_bottom, "vertical")
                 self.animation_bottom = 8 if self.animation_bottom == 7 else 7
 
     def __update_walls(self, walls) -> None:
@@ -420,15 +413,18 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.speed: int = 3
-        self.max_health: int = 3
-        self.current_health: int = self.max_health
-        self.attack_cooldown: float = 250
-        self.current_attack_cooldown: float = 50
+        self.max_health: float = 3 + (Rooms.NUMBER_LEVEL-1) * 0.5
+        self.current_health: float = self.max_health
+        self.attack_cooldown: int = 250
+        self.current_attack_cooldown: int = 50
+        self.current_ultra_attack_cooldown: int = 250
         self.attack_range: int = 55
 
     def update(self, player, walls, magic_balls, projectiles, moneys_group, barrels=None, columns=None) -> None:
         if self.current_health <= 0:
             self.kill()
+        if self.current_ultra_attack_cooldown > 0:
+            self.current_ultra_attack_cooldown -= 1
         if self.current_attack_cooldown > 0:
             self.current_attack_cooldown -= 1
         self.move_towards_player(player, walls)
@@ -490,7 +486,7 @@ class MeleeEnemy(Enemy, pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
         pygame.sprite.Sprite.__init__(self)
         Enemy.__init__(self, x, y)
-        self.speed: int = 5
+        self.speed: int = 4
         self.min_chase_distance: int = 30
         self.push_distance: int = 2
         self.attack_damage: float = 0.5
@@ -583,21 +579,105 @@ class RangeEnemy(Enemy, pygame.sprite.Sprite):
             self.current_attack_cooldown = self.attack_cooldown
 
 
+class RangeBossEnemy(RangeEnemy, pygame.sprite.Sprite):
+    def __init__(self, x: int, y: int):
+        pygame.sprite.Sprite.__init__(self)
+        RangeEnemy.__init__(self, x, y)
+        self.width: int = 70
+        self.height: int = 70
+        self.image = pygame.Surface([self.width, self.height])
+        self.rect = self.image.get_rect()
+        self.x: int = x
+        self.y: int = y
+        self.rect.x = x
+        self.rect.y = y
+        self.image.fill(Color.YELLOW)
+        self.speed: int = 2
+        self.ultra_attack_cooldown: int = 175
+        self.distance_attack: int = 500
+        self.max_health: float = 15
+        self.current_health: float = self.max_health
+
+    def move_towards_player(self, player, walls) -> None:
+        distance_x: int = player.rect.x - self.rect.x
+        distance_y: int = player.rect.y - self.rect.y
+        distance: float = math.sqrt(distance_x**2 + distance_y**2)
+
+        if distance > 0:
+            distance_x /= distance
+            distance_y /= distance
+
+        if self.rect.colliderect(player.rect):
+            pass
+        else:
+            new_x: float = self.rect.x + distance_x*self.speed
+            new_y: float = self.rect.y + distance_y * self.speed
+
+            if self.can_move(new_x, new_y, walls):
+                self.rect.x = int(new_x)
+                self.rect.y = int(new_y)
+
+    def attack(self, player, distance_x: float, distance_y: float, projectiles) -> None:
+        if self.current_ultra_attack_cooldown <= 0:
+            diagonal: float = max(distance_y, distance_x)
+            projectiles.add(
+                Projectile(self.rect.centerx, self.rect.centery, distance_x, 0),
+                Projectile(self.rect.centerx, self.rect.centery, 0, distance_y),
+                Projectile(self.rect.centerx, self.rect.centery, -distance_x, 0),
+                Projectile(self.rect.centerx, self.rect.centery, 0, -distance_y),
+                Projectile(self.rect.centerx, self.rect.centery, diagonal, diagonal),
+                Projectile(self.rect.centerx, self.rect.centery, -diagonal, diagonal),
+                Projectile(self.rect.centerx, self.rect.centery, diagonal, -diagonal),
+                Projectile(self.rect.centerx, self.rect.centery, -diagonal, -diagonal)
+            )
+            self.current_ultra_attack_cooldown = self.ultra_attack_cooldown
+        if self.current_attack_cooldown <= 0:
+            projectile = Projectile(self.rect.centerx, self.rect.centery, distance_x, distance_y)
+            projectiles.add(projectile)
+            self.current_attack_cooldown = self.attack_cooldown
+
+
 class Projectile(RangeEnemy, pygame.sprite.Sprite):
     def __init__(self, x: int, y: int, distance_x: float, distance_y: float):
         pygame.sprite.Sprite.__init__(self)
         self.attack_damage: float = 1
         self.projectile_speed: float = 7
-        self.image = pygame.Surface((15, 15))
-        self.image.fill(Color.WHITE)
+        self.size_width: int = 8
+        self.size_height: int = 8
+        self.textures_big = Textures.MAGIC_BALL_BIG_ENEMY
+        self.textures_small = Textures.MAGIC_BALL_SMALL_ENEMY
+        self.image = self.textures_big
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_width, self.image.get_height() // self.size_height))
         self.rect = self.image.get_rect(center=(x, y))
         self.line_attack = math.sqrt(distance_x**2 + distance_y**2)
         self.velocity_x: float = self.projectile_speed * (distance_x/self.line_attack)
         self.velocity_y: float = self.projectile_speed * (distance_y/self.line_attack)
+        self.animation_move: float = 0
+        self.speed_rotation: int = 5
+        self.swap_image: bool = False
+        self.current_image: str = 'big'  # small
 
     def update(self, current_enemies, player, walls, barrels=None, columns=None) -> None:
         self.rect.x += self.velocity_x
         self.rect.y += self.velocity_y
+        self.animation_move += ActionParams.TIME_ANIMATION_MAGIC_BALL
+        if self.animation_move >= 1 / self.speed_rotation:
+            self.animation_move -= 1.0 / self.speed_rotation
+            self.swap_image = True
+        if self.swap_image:
+            if self.current_image == 'big':
+                self.image = self.textures_small
+                self.image = pygame.transform.scale(self.image,
+                                                    (self.image.get_width() // self.size_width,
+                                                     self.image.get_height() // self.size_height))
+                self.current_image = 'small'
+            else:
+                self.image = self.textures_big
+                self.image = pygame.transform.scale(self.image,
+                                                    (self.image.get_width() // self.size_width,
+                                                     self.image.get_height() // self.size_height))
+                self.current_image = 'big'
+        self.swap_image = False
         if self.rect.colliderect(player.rect):
             player.take_damage(self.attack_damage)
             self.kill()

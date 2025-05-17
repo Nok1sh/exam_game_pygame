@@ -2,7 +2,7 @@ import pygame
 from structures_and_parameters.parameters_game import WindowParams, Color, ActionParams
 from objects.interface_objects import TextOnWindowForOptions, ButtonMenu, ButtonBack, ButtonAction, StoreMenu, Trader
 import importlib
-from structures_and_parameters import rooms
+import structures_and_parameters.rooms
 from structures_and_parameters.structures_on_each_level import Rooms
 
 options_screen = pygame.display.set_mode(
@@ -12,12 +12,12 @@ options_screen = pygame.display.set_mode(
 
 def fullscreen() -> None:
     WindowParams.update_screen(size_fullscreen=True)
-    importlib.reload(room_structures)
+    importlib.reload(structures_and_parameters.rooms)
 
 
 def window_screen() -> None:
     WindowParams.update_screen()
-    importlib.reload(room_structures)
+    importlib.reload(structures_and_parameters.rooms)
 
 
 def options_main_menu() -> None:
@@ -99,7 +99,7 @@ def options_in_game() -> None:
 
 def store_menu(player) -> None:
     def update_score_image():
-        list(text_options_group)[1].kill()
+        list(text_options_group)[-1].kill()
         text_options_group.add(TextOnWindowForOptions(200, WindowParams.HEIGHT // 2 - 300, f'Твои монеты: {player.score}', Color.WHITE, 28))
 
     def update_damage():
@@ -131,9 +131,9 @@ def store_menu(player) -> None:
     )
     text_options_group = pygame.sprite.Group(
         TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 300, 'CURIOSITY SHOP', Color.WHITE),
-        TextOnWindowForOptions(200, WindowParams.HEIGHT // 2 - 300, f'Твои монеты: {player.score}', Color.WHITE, 28),
         TextOnWindowForOptions(WindowParams.WIDTH//2+250, WindowParams.HEIGHT // 2 - 200, f'Приветствую тебя, путник, не желаешь прикупить', Color.WHITE, 28),
-        TextOnWindowForOptions(WindowParams.WIDTH//2+180, WindowParams.HEIGHT // 2 - 170, f'чего-нибудь из моих товаров?', Color.WHITE, 28)
+        TextOnWindowForOptions(WindowParams.WIDTH//2+180, WindowParams.HEIGHT // 2 - 170, f'чего-нибудь из моих товаров?', Color.WHITE, 28),
+        TextOnWindowForOptions(200, WindowParams.HEIGHT // 2 - 300, f'Твои монеты: {player.score}', Color.WHITE, 28)
     )
     buttons_attributes = pygame.sprite.Group(
         ButtonAction(f'Увеличить урон на 1 за {Rooms.COST_UPDATE_DAMAGE} монет', WindowParams.HEIGHT // 2 - 200, update_damage, 350),

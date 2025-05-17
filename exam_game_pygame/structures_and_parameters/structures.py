@@ -208,4 +208,184 @@ def get_structures(number_level: int) -> Dict[int, pygame.sprite.Group]:
                 )
             }
         }
+    if number_level == 3:
+        structures_by_room = {
+                0: {"barrels": pygame.sprite.Group(
+                    Barrel(WindowParams.WIDTH//2-100, WindowParams.HEIGHT-77),
+                    Barrel(WindowParams.WIDTH // 2 - 168, WindowParams.HEIGHT - 77),
+                    Barrel(WindowParams.WIDTH // 2 - 168, WindowParams.HEIGHT - 145),
+                    Barrel(WindowParams.WIDTH // 2 - 236, WindowParams.HEIGHT - 145)
+                ),
+                    "coins": pygame.sprite.Group(
+                    ),
+                    "columns": pygame.sprite.Group(
+                        Column(WindowParams.WIDTH//2 + 100, 77, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 100, 145, random.randint(1, 6))
+                    ),
+                    "potions": pygame.sprite.Group(
+                    )
+                },
+                11: {"barrels": pygame.sprite.Group(
+                ),
+                    "coins": pygame.sprite.Group(
+                    ),
+                    "columns": pygame.sprite.Group(
+                        Column(WindowParams.WIDTH // 2, WindowParams.HEIGHT//2, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2, WindowParams.HEIGHT//2+68, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 -68, WindowParams.HEIGHT//2, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 +68, WindowParams.HEIGHT//2+140, random.randint(1, 6)),
+                        Column(77, 77, random.randint(1, 6)),
+                        Column(77, 145, random.randint(1, 6)),
+                        Column(145, 77, random.randint(1, 6))
+                    ),
+                    "potions": pygame.sprite.Group(
+                    )
+                },
+                5: {"barrels": pygame.sprite.Group(
+                    Barrel(WindowParams.WIDTH//2-100, WindowParams.HEIGHT//2),
+                    Barrel(WindowParams.WIDTH//2-100, WindowParams.HEIGHT//2-68),
+                    Barrel(WindowParams.WIDTH // 2 - 40, WindowParams.HEIGHT // 2 +63),
+                    Barrel(WindowParams.WIDTH // 2 +28, WindowParams.HEIGHT // 2 + 63),
+                    Barrel(WindowParams.WIDTH // 2 +88, WindowParams.HEIGHT // 2),
+                    Barrel(WindowParams.WIDTH // 2 +88, WindowParams.HEIGHT // 2-68),
+                    Barrel(WindowParams.WIDTH // 2 - 40, WindowParams.HEIGHT // 2 - 130),
+                    Barrel(WindowParams.WIDTH // 2 + 28, WindowParams.HEIGHT // 2 - 130)
+                ),
+                    "coins": pygame.sprite.Group(
+                    ),
+                    "columns": pygame.sprite.Group(
+                    ),
+                    "potions": pygame.sprite.Group(
+                    )
+                },
+                12: {"barrels": pygame.sprite.Group(
+                    Barrel(WindowParams.WIDTH//2-156, WindowParams.HEIGHT//2-204),
+                    Barrel(WindowParams.WIDTH // 2 +268, WindowParams.HEIGHT // 2 +136)
+                ),
+                    "coins": pygame.sprite.Group(
+                    ),
+                    "columns": pygame.sprite.Group(
+                        Column(WindowParams.WIDTH//2+200, WindowParams.HEIGHT//2, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 200, WindowParams.HEIGHT // 2+68, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 200, WindowParams.HEIGHT // 2-68, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 200, WindowParams.HEIGHT // 2-136, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 200, WindowParams.HEIGHT // 2+136, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 128, WindowParams.HEIGHT // 2-136, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 56, WindowParams.HEIGHT // 2 - 136, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 -16, WindowParams.HEIGHT // 2 - 136, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 -88, WindowParams.HEIGHT // 2 - 136, random.randint(1, 6))
+                    ),
+                    "potions": pygame.sprite.Group(
+                    )
+                },
+                9: {"barrels": pygame.sprite.Group(
+                    Barrel(WindowParams.WIDTH // 2 - 57, WindowParams.HEIGHT - 218),
+                    Barrel(WindowParams.WIDTH // 2 +11, WindowParams.HEIGHT - 218)
+                ),
+                    "coins": pygame.sprite.Group(
+                    ),
+                    "columns": pygame.sprite.Group(
+                        Column(WindowParams.WIDTH // 2 - 200, WindowParams.HEIGHT - 77, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 - 200, WindowParams.HEIGHT - 145, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 - 200, WindowParams.HEIGHT - 218, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 - 130, WindowParams.HEIGHT - 218, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 80, WindowParams.HEIGHT - 218, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 152, WindowParams.HEIGHT - 218, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 224, WindowParams.HEIGHT - 218, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 224, WindowParams.HEIGHT - 145, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 224, WindowParams.HEIGHT - 77, random.randint(1, 6)),
+                    ),
+                    "potions": pygame.sprite.Group(
+                    )
+                },
+                13: {"barrels": pygame.sprite.Group(
+                    Barrel(WindowParams.WIDTH // 2, WindowParams.HEIGHT - 77),
+                    Barrel(WindowParams.WIDTH // 2, WindowParams.HEIGHT - 145),
+                    Barrel(WindowParams.WIDTH // 2-68, WindowParams.HEIGHT - 77),
+                    Barrel(WindowParams.WIDTH // 2 - 70, WindowParams.HEIGHT//2 - 120),
+                    Barrel(WindowParams.WIDTH // 2 - 70, WindowParams.HEIGHT//2 - 188),
+                ),
+                    "coins": pygame.sprite.Group(
+                    ),
+                    "columns": pygame.sprite.Group(
+                        Column(WindowParams.WIDTH // 2, WindowParams.HEIGHT//2+24, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2+96, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2-48, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2+168, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 -120, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH -78, 77, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH - 78, 148, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH - 148, 148, random.randint(1, 6)),
+                    ),
+                    "potions": pygame.sprite.Group(
+                    )
+                }
+            }
+    if number_level == 4:
+        structures_by_room = {
+                3: {"barrels": pygame.sprite.Group(
+                ),
+                    "coins": pygame.sprite.Group(
+                    ),
+                    "columns": pygame.sprite.Group(
+                        Column(WindowParams.WIDTH//2-300, WindowParams.HEIGHT-77, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 - 345, WindowParams.HEIGHT - 149, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 - 390, WindowParams.HEIGHT - 221, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 - 390, WindowParams.HEIGHT - 293, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 300, WindowParams.HEIGHT //2, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 345, WindowParams.HEIGHT//2 - 72, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 385, WindowParams.HEIGHT//2-144, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 + 458, WindowParams.HEIGHT//2 - 190, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH // 2 +532, WindowParams.HEIGHT//2 - 190, random.randint(1, 6)),
+                    ),
+                    "potions": pygame.sprite.Group(
+                    )
+                },
+                5: {"barrels": pygame.sprite.Group(
+                    Barrel(77, 77),
+                    Barrel(77, 145),
+                    Barrel(145, 77),
+                    Barrel(WindowParams.WIDTH-77, 77),
+                    Barrel(WindowParams.WIDTH - 145, 77),
+                    Barrel(WindowParams.WIDTH - 77, 145),
+                    Barrel(WindowParams.WIDTH - 77, WindowParams.HEIGHT-77),
+                    Barrel(WindowParams.WIDTH - 77, WindowParams.HEIGHT - 145),
+                    Barrel(WindowParams.WIDTH - 145, WindowParams.HEIGHT - 77),
+                    Barrel(77, WindowParams.HEIGHT - 77),
+                    Barrel(145, WindowParams.HEIGHT - 77),
+                    Barrel(77, WindowParams.HEIGHT - 145)
+                ),
+                    "coins": pygame.sprite.Group(
+                    ),
+                    "columns": pygame.sprite.Group(
+                    ),
+                    "potions": pygame.sprite.Group(
+                    )
+                },
+                4: {"barrels": pygame.sprite.Group(
+                    Barrel(175, WindowParams.HEIGHT//2),
+                    Barrel(WindowParams.WIDTH-175, WindowParams.HEIGHT // 2),
+                    Barrel(WindowParams.WIDTH //2, WindowParams.HEIGHT -175),
+                    Barrel(WindowParams.WIDTH // 2, 175)
+                ),
+                    "coins": pygame.sprite.Group(
+                    ),
+                    "columns": pygame.sprite.Group(
+                        Column(175, 175, random.randint(1, 6)),
+                        Column(175, 247, random.randint(1, 6)),
+                        Column(247, 175, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH-175, 175, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH-175, 247, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH-247, 175, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH - 175, WindowParams.HEIGHT-175, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH - 175, WindowParams.HEIGHT-247, random.randint(1, 6)),
+                        Column(WindowParams.WIDTH - 247, WindowParams.HEIGHT-175, random.randint(1, 6)),
+                        Column(175, WindowParams.HEIGHT-175, random.randint(1, 6)),
+                        Column(175, WindowParams.HEIGHT-247, random.randint(1, 6)),
+                        Column(247, WindowParams.HEIGHT-175, random.randint(1, 6)),
+                    ),
+                    "potions": pygame.sprite.Group(
+                    )
+                }
+        }
     return structures_by_room

@@ -27,9 +27,14 @@ class Structures:
                     (-2, 1): 9, (-2, -1): 5}
         if number_level == 2:
             return {(0, 0): 0, (1, 0): 11, (1, -1): 3, (1, -2): 12, (2, -2): 7, (-1, 0): 9, (-1, -1): 5}
+        if number_level == 3:
+            return {(0, 0): 0, (1, 0): 11, (1, -1): 5, (-1, 0): 12, (-1, 1): 9, (0, 1): 13, (1, 1): 7, (0, 2): 4}
+        if number_level == 4:
+            return {(0, 0): 3, (0, -1): 5, (0, 1): 4}
 
     @staticmethod
     def get_portal_on_level(number_level: int) -> Dict[int, pygame.sprite.Group]:
+        print(number_level)
         if number_level == 1:
             structures_by_room = {4: pygame.sprite.Group(
                 PortalStand(), Portal()
@@ -38,6 +43,12 @@ class Structures:
             structures_by_room = {7: pygame.sprite.Group(
                 PortalStand(), Portal()
             )}
+        if number_level == 3:
+            structures_by_room = {4: pygame.sprite.Group(
+                PortalStand(), Portal()
+            )}
+        if number_level == 4:
+            structures_by_room = {}
         return structures_by_room
 
     @staticmethod
@@ -47,6 +58,14 @@ class Structures:
                 Tent()
             )}
         if number_level == 2:
+            tent_by_level = {5: pygame.sprite.Group(
+                Tent()
+            )}
+        if number_level == 3:
+            tent_by_level = {7: pygame.sprite.Group(
+                Tent()
+            )}
+        if number_level == 4:
             tent_by_level = {5: pygame.sprite.Group(
                 Tent()
             )}
@@ -64,7 +83,6 @@ class Rooms:
     """
     Комнаты строятся по кортежам, каждый индекс картежа это наличие двери в нужную сторону лево -> вверх -> право -> низ
     """
-    ROOM: int = 0
     rooms: List[tuple] = [
         (1, 0, 1, 0),
         (1, 1, 1, 1),
@@ -86,6 +104,7 @@ class Rooms:
     LEVEL_STRUCTURE: Dict[int, dict] = Structures.get_structures_on_level(NUMBER_LEVEL)
     PORTAL_AND_STAND: Dict[int, pygame.sprite.Group] = Structures.get_portal_on_level(NUMBER_LEVEL)
     TENT: Dict[int, pygame.sprite.Group] = Structures.get_tent(NUMBER_LEVEL)
+    ROOM: int = LEVEL_ROOMS[(0, 0)]
     DOORS = Structures.get_doors()
     DOORS_FLAG: bool = False
     CURRENT_ROOM: Tuple[int, int] = (0, 0)
@@ -105,20 +124,22 @@ class Rooms:
         Rooms.TENT = Structures.get_tent(Rooms.NUMBER_LEVEL)
         Rooms.CURRENT_ROOM = (0, 0)
         Rooms.DOORS_FLAG = False
-        Rooms.ROOM = 0
+        Rooms.ROOM = Rooms.LEVEL_ROOMS[(0, 0)]
         Rooms.FLAG_SWAP_LEVEL = True
         Rooms.COST_UPDATE_DAMAGE += 50
         Rooms.COST_UPDATE_SPEED += 50
         Rooms.COST_UPDATE_RECOVERED_MANA += 50
+        Rooms.COST_RECOVERY_HEALTH += 50
 
     @staticmethod
     def restart_parameters() -> None:
-        Rooms.ROOM = 0
         Rooms.DOORS_FLAG = False
         Rooms.NUMBER_LEVEL = 1
         Rooms.CURRENT_ROOM = (0, 0)
         Rooms.LEVEL_ROOMS = Structures.get_level(Rooms.NUMBER_LEVEL)
+        Rooms.LEVEL_STRUCTURE = Structures.get_structures_on_level(Rooms.NUMBER_LEVEL)
         Rooms.TENT = Structures.get_tent(Rooms.NUMBER_LEVEL)
+        Rooms.ROOM = Rooms.LEVEL_ROOMS[(0, 0)]
         Rooms.COST_UPDATE_DAMAGE = 200
         Rooms.COST_UPDATE_SPEED = 150
         ActionParams.RECOVERY_MANA_BAR = 3000

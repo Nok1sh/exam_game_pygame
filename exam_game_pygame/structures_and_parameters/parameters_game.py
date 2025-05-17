@@ -69,6 +69,8 @@ class Textures:
         cls.FLOOR = pygame.image.load("../exam_game_pygame/textures/floor.png").convert()
         cls.MAGIC_BALL_BIG = pygame.image.load("../exam_game_pygame/textures/magicball_big.png").convert_alpha()
         cls.MAGIC_BALL_SMALL = pygame.image.load("../exam_game_pygame/textures/magicball_small.png").convert_alpha()
+        cls.MAGIC_BALL_BIG_ENEMY = pygame.image.load("../exam_game_pygame/textures/magicball_enemy_big.png").convert_alpha()
+        cls.MAGIC_BALL_SMALL_ENEMY = pygame.image.load("../exam_game_pygame/textures/magicball_enemy_small.png").convert_alpha()
         cls.MANA_BAR_0 = pygame.image.load("../exam_game_pygame/textures/manabar/manabar_0.png").convert_alpha()
         cls.MANA_BAR_1 = pygame.image.load("../exam_game_pygame/textures/manabar/manabar_1.png").convert_alpha()
         cls.MANA_BAR_2 = pygame.image.load("../exam_game_pygame/textures/manabar/manabar_2.png").convert_alpha()
