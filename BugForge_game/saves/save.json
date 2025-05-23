@@ -1,0 +1,8 @@
+{
+    "player_attack_damage": 1.5,
+    "player_health": 3.5,
+    "health_bar": true,
+    "score_money": 100,
+    "speed_hero": 5,
+    "number_level": 2
+}
