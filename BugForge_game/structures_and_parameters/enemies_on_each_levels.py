@@ -1,7 +1,7 @@
 import pygame
 from typing import Dict
 from structures_and_parameters.parameters_game import WindowParams
-from structures_and_parameters.structures_on_each_level import Rooms
+from structures_and_parameters.parameters_rooms_and_structures import Rooms
 from objects.action_objects import MeleeEnemy, RangeEnemy, RangeBossEnemy
 
 
@@ -30,7 +30,7 @@ class EnemiesStructure(pygame.sprite.Sprite):
                 9: pygame.sprite.Group(
                     RangeEnemy(100, WindowParams.HEIGHT-100),
                     RangeEnemy(100, 100),
-                    MeleeEnemy(WindowParams.WIDTH//2, 70)
+                    MeleeEnemy(WindowParams.WIDTH//2, 90)
                 ),
                 11: pygame.sprite.Group(
                     RangeEnemy(100, 100),
@@ -42,7 +42,7 @@ class EnemiesStructure(pygame.sprite.Sprite):
                     MeleeEnemy(100, WindowParams.HEIGHT - 100)
                 ),
                 12: pygame.sprite.Group(
-                    RangeEnemy(200, 70),
+                    RangeEnemy(200, WindowParams.HEIGHT - 100),
                     MeleeEnemy(WindowParams.WIDTH-150, WindowParams.HEIGHT - 100)
                 )
             }

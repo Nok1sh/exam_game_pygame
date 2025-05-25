@@ -4,7 +4,7 @@ import time
 import math
 from typing import Dict
 from structures_and_parameters.parameters_game import Color, WindowParams, Textures, ActionParams
-from structures_and_parameters.structures_on_each_level import Rooms
+from structures_and_parameters.parameters_rooms_and_structures import Rooms
 from objects.interface_objects import Coin
 from game_windows.window_options import store_menu
 
@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.height: int = 50
         self.size_width: int = 9
         self.size_height: int = 8
-        self.image = pygame.image.load("../exam_game_pygame/textures/hero/hero.png").convert_alpha()
+        self.image = pygame.image.load("../textures/hero/hero.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_width, self.image.get_height()//self.size_height))
         self.rect = self.image.get_rect()
         self.rect.center = (WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2)
@@ -56,6 +56,9 @@ class Player(pygame.sprite.Sprite):
         self.animation_move: int = 0
 
     def restart_parameters(self) -> None:
+        """
+        Updating changing settings when restarting the game
+        """
         self.rect.x = WindowParams.WIDTH // 2
         self.rect.y = WindowParams.HEIGHT // 2
         self.speed_x: int = 0
@@ -71,47 +74,49 @@ class Player(pygame.sprite.Sprite):
         Rooms.restart_parameters()
 
     @staticmethod
-    def __generate_new_room(index: int) -> int:
+    def __generate_new_room() -> int:
+        """
+        Getting the room number based on the character's coordinate
+        """
         if Rooms.CURRENT_ROOM in Rooms.LEVEL_ROOMS.keys():
             return Rooms.LEVEL_ROOMS[Rooms.CURRENT_ROOM]
-        # number_room: int = random.randint(1, Rooms.COUNT_ROOMS-1)
-        # while not (Rooms.rooms[number_room][index] == 1 and number_room not in Rooms.GENERATED_ROOM):
-        #     number_room: int = random.randint(1, Rooms.COUNT_ROOMS-1)
-        # if Rooms.rooms[number_room].count(1) != 1:
-        #     Rooms.GENERATED_ROOM.append(number_room)
-        # Rooms.LEVEL_ROOMS[Rooms.CURRENT_ROOM] = number_room
-        # return number_room
 
     def __next_room(self, door: str) -> None:
+        """
+        Handling the movement of the hero between rooms
+        """
         if door == 'left':  # заходим в предыдущей комнате в правую дверь и выходим из левой
             self.speed_x = 0
             self.rect.left = 15
             x_coord, y_coord = Rooms.CURRENT_ROOM
             Rooms.CURRENT_ROOM = (x_coord+1, y_coord)
-            number_room: int = self.__generate_new_room(0)
+            number_room: int = self.__generate_new_room()
         elif door == 'right':  # заходим в предыдущей комнате в левую дверь и выходим из правой
             self.speed_x = 0
             self.rect.right = WindowParams.WIDTH - 15
             x_coord, y_coord = Rooms.CURRENT_ROOM
             Rooms.CURRENT_ROOM = (x_coord - 1, y_coord)
-            number_room: int = self.__generate_new_room(2)
+            number_room: int = self.__generate_new_room()
         elif door == 'top':  # заходим в предыдущей комнате в нижнюю дверь и выходим из верхней
             self.speed_y = 0
             self.rect.top = 15
             x_coord, y_coord = Rooms.CURRENT_ROOM
             Rooms.CURRENT_ROOM = (x_coord, y_coord - 1)
-            number_room: int = self.__generate_new_room(1)
+            number_room: int = self.__generate_new_room()
         elif door == 'bottom':  # заходим в предыдущей комнате в верхнюю дверь и выходим из нижней
             self.speed_y = 0
             self.rect.bottom = WindowParams.HEIGHT - 15
             x_coord, y_coord = Rooms.CURRENT_ROOM
             Rooms.CURRENT_ROOM = (x_coord, y_coord + 1)
-            number_room: int = self.__generate_new_room(3)
+            number_room: int = self.__generate_new_room()
         Rooms.ROOM = number_room
 
     def __swap_image(self, number: int, line: str) -> None:
+        """
+        Changing the image of the hero when moving
+        """
         self.image = pygame.image.load(
-            f"../exam_game_pygame/textures/hero/hero_move{number}.png").convert_alpha()
+            f"../textures/hero/hero_move{number}.png").convert_alpha()
         if line == "horizontal":
             self.image = pygame.transform.scale(self.image,
                                                 (self.image.get_width() // self.size_height, self.image.get_height() // self.size_width))
@@ -123,6 +128,9 @@ class Player(pygame.sprite.Sprite):
                                                 (self.image.get_width() // self.size_width, self.image.get_height() // self.size_width))
 
     def __animation_move_hero(self, line: str, direction: str) -> None:
+        """
+        Handling hero animation when moving
+        """
         self.animation_moves[line] += ActionParams.TIME_ANIMATION_HERO_MOVE
         if self.animation_moves[line] >= 1 / self.speed_animation:
             self.animation_moves[line] -= 1.0 / self.speed_animation
@@ -311,6 +319,9 @@ class Player(pygame.sprite.Sprite):
 
 
 class MagicBall(pygame.sprite.Sprite):
+    """
+    Hero's shells
+    """
     def __init__(self, center: tuple, line_move: str):
         super().__init__()
         self.speed_x: int = 0
@@ -469,13 +480,30 @@ class MeleeEnemy(Enemy, pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
         pygame.sprite.Sprite.__init__(self)
         Enemy.__init__(self, x, y)
+        self.size_melee_enemy: int = 10
+        self.image = pygame.image.load(f"../textures/melee_enemy/melee_enemy_1.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_melee_enemy, self.image.get_height()//self.size_melee_enemy))
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x, self.y)
         self.speed: int = 4
-        self.min_chase_distance: int = 30
         self.push_distance: int = 2
         self.attack_damage: float = 0.5
-        self.attack_range: int = 55
+        self.attack_range: int = 90
+        self.number_image: int = 1
+        self.animation_melee_enemy: int = 0
+        self.speed_rotation: int = 40
+
+    def swap_image(self):
+        self.image = Textures.MELEE_ENEMY[self.number_image-1]
+        self.image = pygame.transform.scale(self.image, (
+        self.image.get_width() // self.size_melee_enemy, self.image.get_height() // self.size_melee_enemy))
 
     def move_towards_player(self, player, walls) -> None:
+        self.animation_melee_enemy += ActionParams.TIME_ANIMATION_MELEE_ENEMY
+        if self.animation_melee_enemy >= 1 / self.speed_rotation:
+            self.animation_melee_enemy -= 1.0 / self.speed_rotation
+            self.swap_image()
+            self.number_image = self.number_image % 5 + 1
         distance_x: int = player.rect.x - self.rect.x
         distance_y: int = player.rect.y - self.rect.y
         distance: float = math.sqrt(distance_x**2 + distance_y**2)
@@ -514,12 +542,29 @@ class RangeEnemy(Enemy, pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
         pygame.sprite.Sprite.__init__(self)
         Enemy.__init__(self, x, y)
+        self.size_range_enemy: int = 22
+        self.image = pygame.image.load(f"../textures/range_enemy/range_enemy_1.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_range_enemy, self.image.get_height() // self.size_range_enemy))
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x, self.y)
         self.distance_attack: int = 350
         self.evade_chance: float = 0.3
         self.attack_cooldown: float = 125
-        self.image.fill(Color.PINK)
+        self.number_image: int = 1
+        self.animation_range_enemy: int = 0
+        self.speed_rotation: int = 10
+
+    def swap_image(self):
+        self.image = Textures.RANGE_ENEMY[self.number_image-1]
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_range_enemy, self.image.get_height() // self.size_range_enemy))
 
     def move_towards_player(self, player, walls) -> None:
+        self.animation_range_enemy += ActionParams.TIME_ANIMATION_MELEE_ENEMY
+        if self.animation_range_enemy >= 1 / self.speed_rotation:
+            self.animation_range_enemy -= 1.0 / self.speed_rotation
+            self.swap_image()
+            self.number_image = self.number_image % 26 + 1
+
         distance_x: int = player.rect.x - self.rect.x
         distance_y: int = player.rect.y - self.rect.y
         distance: float = math.sqrt(distance_x ** 2 + distance_y ** 2)

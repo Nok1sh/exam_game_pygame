@@ -22,7 +22,7 @@ class Doors(pygame.sprite.Sprite):
     def __init__(self, line: str, x=None, y=None):
         super().__init__()
         self.size_door: int = 2
-        self.image = pygame.image.load(f"../exam_game_pygame/textures/door_{line}.png")
+        self.image = pygame.image.load(f"../textures/door_{line}.png")
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_door, self.image.get_height() // self.size_door))
         if line == 'vertical':
             self.rect = self.image.get_rect()
@@ -47,7 +47,7 @@ class ManaBar(pygame.sprite.Sprite):
         self.player = player
         self.size_width: int = 2
         self.size_height: int = 3
-        self.image = pygame.image.load("../exam_game_pygame/textures/manabar/manabar_5.png")
+        self.image = pygame.image.load("../textures/manabar/manabar_5.png")
         self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_width, self.image.get_height()//self.size_height))
         self.rect = self.image.get_rect()
         self.rect.x = 10
@@ -75,9 +75,9 @@ class HealthBar(pygame.sprite.Sprite):
         self.player = player
         self.size_width: int = 2
         self.size_height: int = 3
-        self.image = pygame.image.load("../exam_game_pygame/textures/healthbar2/healthbar_4.png").convert_alpha() \
+        self.image = pygame.image.load("../textures/healthbar2/healthbar_4.png").convert_alpha() \
             if ActionParams.FLAG_UPPER_HEALTH_BAR \
-            else pygame.image.load("../exam_game_pygame/textures/healthbar/healthbar_3.png").convert_alpha()
+            else pygame.image.load("../textures/healthbar/healthbar_3.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_width, self.image.get_height() // self.size_height))
         self.rect = self.image.get_rect()
         self.rect.y = WindowParams.HEIGHT - 45
@@ -99,7 +99,7 @@ class MoneyBar(pygame.sprite.Sprite):
         super().__init__()
         self.size_width: int = 1
         self.size_height: int = 2
-        self.image = pygame.image.load("../exam_game_pygame/textures/money_bar.png").convert_alpha()
+        self.image = pygame.image.load("../textures/money_bar.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_width, self.image.get_height() // self.size_height))
         self.rect = self.image.get_rect()
         self.rect.center = (135, 22)
@@ -109,7 +109,7 @@ class Tent(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.size_tent: int = 5
-        self.image = pygame.image.load("../exam_game_pygame/textures/store/tent.png").convert_alpha()
+        self.image = pygame.image.load("../textures/store/tent.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_tent, self.image.get_height() // self.size_tent))
         self.rect = self.image.get_rect()
         self.rect.center = (WindowParams.WIDTH//2, WindowParams.HEIGHT//2)
@@ -119,7 +119,7 @@ class Trader(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.size: int = 1
-        self.image = pygame.image.load("../exam_game_pygame/textures/store/steampunk_trader.png").convert_alpha()
+        self.image = pygame.image.load("../textures/store/steampunk_trader.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size, self.image.get_height() // self.size))
         self.rect = self.image.get_rect()
         self.rect.center = ((WindowParams.WIDTH//4)*3-50, WindowParams.HEIGHT//2+100)
@@ -128,7 +128,7 @@ class Trader(pygame.sprite.Sprite):
 class StoreMenu(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("../exam_game_pygame/textures/store/store_menu.png").convert_alpha()
+        self.image = pygame.image.load("../textures/store/store_menu.png").convert_alpha()
         self.image = pygame.transform.scale(self.image,
                                                 (self.image.get_width() * 1.5, self.image.get_height() // 1))
         self.rect = self.image.get_rect()
@@ -139,7 +139,7 @@ class Portal(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.size_portal: int = 4
-        self.image = pygame.image.load(f"../exam_game_pygame/textures/portals/portal_1.png").convert_alpha()
+        self.image = pygame.image.load(f"../textures/portals/portal_1.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_portal, self.image.get_height()//self.size_portal))
         self.rect = self.image.get_rect()
         self.rect.center = (WindowParams.WIDTH//2, WindowParams.HEIGHT//4+100)
@@ -160,7 +160,7 @@ class PortalStand(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.size_portal: int = 3
-        self.image = pygame.image.load("../exam_game_pygame/textures/portal_stand.png")
+        self.image = pygame.image.load("../textures/portal_stand.png")
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_portal, self.image.get_height() // self.size_portal))
         self.rect = self.image.get_rect()
         self.rect.center = (WindowParams.WIDTH // 2, WindowParams.HEIGHT // 3+100)
@@ -170,7 +170,7 @@ class Barrel(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
         super().__init__()
         self.size_barrel: int = 5
-        self.image = pygame.image.load("../exam_game_pygame/textures/barrel.png").convert_alpha()
+        self.image = pygame.image.load("../textures/barrel.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_barrel, self.image.get_height() // self.size_barrel))
         self.rect = self.image.get_rect()
         self.x: int = x
@@ -201,7 +201,7 @@ class Column(pygame.sprite.Sprite):
         self.x: int = x
         self.y: int = y
         self.random_image = random_image
-        self.image = pygame.image.load(f"../exam_game_pygame/textures/columns/column_{self.random_image}.png").convert_alpha()
+        self.image = pygame.image.load(f"../textures/columns/column_{self.random_image}.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_column, self.image.get_height() // self.size_column))
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
@@ -215,7 +215,7 @@ class Coin(pygame.sprite.Sprite):
         super().__init__()
         self.size: int = 3
         self.score: int = 50
-        self.image = pygame.image.load("../exam_game_pygame/textures/coin/money_1.png").convert_alpha()
+        self.image = pygame.image.load("../textures/coin/money_1.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size, self.image.get_height()//self.size))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -237,7 +237,7 @@ class Potion(pygame.sprite.Sprite):
         super().__init__()
         self.name: str = name
         self.size_potion: int = 20
-        self.image = pygame.image.load(f"../exam_game_pygame/textures/potions/{name}_potion.png")
+        self.image = pygame.image.load(f"../textures/potions/{name}_potion.png")
         self.image = pygame.transform.scale(self.image,(self.image.get_width() // self.size_potion, self.image.get_height() // self.size_potion))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)

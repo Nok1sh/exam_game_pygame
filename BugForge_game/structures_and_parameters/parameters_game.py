@@ -4,6 +4,9 @@ pygame.init()
 
 
 class WindowParams:
+    """
+    Game window settings
+    """
     info = pygame.display.Info()
     WIDTH: int = int(info.current_w*0.8)
     HEIGHT: int = int(info.current_h*0.8)
@@ -14,9 +17,9 @@ class WindowParams:
         (WIDTH, HEIGHT),
         pygame.SHOWN
     )
-    icon_game = pygame.image.load("../exam_game_pygame/textures/hero/hero.png")
+    icon_game = pygame.image.load("../textures/hero/hero.png")
     pygame.display.set_icon(icon_game)
-    pygame.display.set_caption("Bugforge ")
+    pygame.display.set_caption("Bugforge")
 
     @staticmethod
     def update_screen(size_fullscreen=False) -> None:
@@ -32,6 +35,9 @@ class WindowParams:
 
 
 class ActionParams:
+    """
+    Parameters of active constants and animations
+    """
     DELAY_MAGIC_BALLS: int = 500
     LAST_MAGIC_BALLS: int = -10
     RECOVERY_MANA_BAR: int = 3000
@@ -39,6 +45,7 @@ class ActionParams:
     FPS: int = 60
     CLOCK = pygame.time.Clock()
     TIME_ANIMATION_MAGIC_BALL: float = CLOCK.tick(FPS) / 1000
+    TIME_ANIMATION_MELEE_ENEMY: float = CLOCK.tick(FPS) / 1000
     TIME_ANIMATION_HERO_MOVE: float = CLOCK.tick(FPS) / 3000
     TIME_ANIMATION_COIN: float = CLOCK.tick(FPS) / 1000
     TIME_ANIMATION_PORTAL: float = CLOCK.tick(FPS) / 750
@@ -68,20 +75,23 @@ class Textures:
     def load_all(cls):
         if cls._loaded:
             return
-        cls.WALL = pygame.image.load("../exam_game_pygame/textures/wall.png").convert()
-        cls.FLOOR = pygame.image.load("../exam_game_pygame/textures/floor.png").convert()
-        cls.MAGIC_BALL_BIG = pygame.image.load("../exam_game_pygame/textures/magicball_big.png").convert_alpha()
-        cls.MAGIC_BALL_SMALL = pygame.image.load("../exam_game_pygame/textures/magicball_small.png").convert_alpha()
-        cls.MAGIC_BALL_BIG_ENEMY = pygame.image.load("../exam_game_pygame/textures/magicball_enemy_big.png").convert_alpha()
-        cls.MAGIC_BALL_SMALL_ENEMY = pygame.image.load("../exam_game_pygame/textures/magicball_enemy_small.png").convert_alpha()
-        cls.MANA_BARS = [pygame.image.load(f"../exam_game_pygame/textures/manabar/manabar_{number}.png").convert_alpha() for number in range(6)]
-        cls.HEALTH_BARS = [pygame.image.load(f"../exam_game_pygame/textures/healthbar/healthbar_{number}.png").convert_alpha() for number in range(4)]
-        cls.HEALTH_BARS_BIG = [pygame.image.load(f"../exam_game_pygame/textures/healthbar2/healthbar_{number}.png").convert_alpha() for number in range(5)]
-        cls.MONEY_BAR = pygame.image.load("../exam_game_pygame/textures/money_bar.png").convert_alpha()
-        cls.PORTAL: list = [pygame.image.load(f"../exam_game_pygame/textures/portals/portal_{number}.png").convert_alpha() for number in range(1, 17)]
-        cls.PORTAL_STAND = pygame.image.load("../exam_game_pygame/textures/portal_stand.png")
-        cls.COIN = [pygame.image.load(f"../exam_game_pygame/textures/coin/money_{number}.png").convert_alpha() for number in range(1, 7)]
-        cls.COLUMN = [pygame.image.load(f"../exam_game_pygame/textures/columns/column_{number}.png").convert_alpha() for number in range(1, 7)]
+        cls.WALL = pygame.image.load("../textures/wall.png").convert()
+        #cls.FLOOR = pygame.image.load("../textures/floor.png").convert()
+        cls.MAGIC_BALL_BIG = pygame.image.load("../textures/magicballs/magicball_big.png").convert_alpha()
+        cls.MAGIC_BALL_SMALL = pygame.image.load("../textures/magicballs/magicball_small.png").convert_alpha()
+        cls.MAGIC_BALL_BIG_ENEMY = pygame.image.load("../textures/magicballs/magicball_enemy_big.png").convert_alpha()
+        cls.MAGIC_BALL_SMALL_ENEMY = pygame.image.load("../textures/magicballs/magicball_enemy_small.png").convert_alpha()
+        cls.MANA_BARS = [pygame.image.load(f"../textures/manabar/manabar_{number}.png").convert_alpha() for number in range(6)]
+        cls.HEALTH_BARS = [pygame.image.load(f"../textures/healthbar/healthbar_{number}.png").convert_alpha() for number in range(4)]
+        cls.HEALTH_BARS_BIG = [pygame.image.load(f"../textures/healthbar2/healthbar_{number}.png").convert_alpha() for number in range(5)]
+        cls.MONEY_BAR = pygame.image.load("../textures/money_bar.png").convert_alpha()
+        cls.PORTAL: list = [pygame.image.load(f"../textures/portals/portal_{number}.png").convert_alpha() for number in range(1, 17)]
+        cls.PORTAL_STAND = pygame.image.load("../textures/portal_stand.png")
+        cls.COIN = [pygame.image.load(f"../textures/coin/money_{number}.png").convert_alpha() for number in range(1, 7)]
+        cls.COLUMN = [pygame.image.load(f"../textures/columns/column_{number}.png").convert_alpha() for number in range(1, 7)]
+        cls.MELEE_ENEMY = [pygame.image.load(f"../textures/melee_enemy/melee_enemy_{number}.png").convert_alpha() for number in range(1, 6)]
+        cls.RANGE_ENEMY = [pygame.image.load(f"../textures/range_enemy/range_enemy_{number}.png").convert_alpha() for number in range(1, 27)]
         #cls.PLAYER = pygame.image.load("player.png").convert_alpha()
+        cls.FLOOR = pygame.image.load(f"../textures/stone_floor.png")
 
         cls._loaded = True

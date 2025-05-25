@@ -3,7 +3,7 @@ from structures_and_parameters.parameters_game import WindowParams, Color, Actio
 from objects.interface_objects import TextOnWindowForOptions, ButtonMenu, ButtonBack, ButtonAction, StoreMenu, Trader, HealthBar
 import importlib
 import structures_and_parameters.rooms
-from structures_and_parameters.structures_on_each_level import Rooms
+from structures_and_parameters.parameters_rooms_and_structures import Rooms
 
 options_screen = pygame.display.set_mode(
     (WindowParams.WIDTH, WindowParams.HEIGHT),
@@ -12,12 +12,12 @@ options_screen = pygame.display.set_mode(
 
 def fullscreen() -> None:
     WindowParams.update_screen(size_fullscreen=True)
-    importlib.reload(structures_and_parameters.rooms)
+    #importlib.reload(structures_and_parameters.rooms)
 
 
 def window_screen() -> None:
     WindowParams.update_screen()
-    importlib.reload(structures_and_parameters.rooms)
+    #importlib.reload(structures_and_parameters.rooms)
 
 
 def change_health_bar_big():
@@ -32,17 +32,17 @@ def change_health_bar_small():
 
 def options_main_menu() -> None:
     buttons_options_group = pygame.sprite.Group(
-        ButtonMenu('Fullscreen', WindowParams.HEIGHT // 2 - 200, x=WindowParams.WIDTH//2 - 180, button_call=fullscreen, width=300, height=75),
-        ButtonMenu(f'Windowed Mode', WindowParams.HEIGHT // 2 - 200, x=WindowParams.WIDTH//2 + 180, button_call=window_screen, width=300, height=75),
-        ButtonMenu(f'Upper HealthBar', WindowParams.HEIGHT // 2, x=WindowParams.WIDTH//2 - 180, button_call=change_health_bar_big, width=300, height=75),
-        ButtonMenu(f'Lower HealthBar', WindowParams.HEIGHT // 2, x=WindowParams.WIDTH//2 + 180, button_call=change_health_bar_small, width=300, height=75)
+        ButtonMenu('Полный экран', WindowParams.HEIGHT // 2 - 200, x=WindowParams.WIDTH//2 - 180, button_call=fullscreen, width=300, height=75),
+        ButtonMenu(f'Оконный режим', WindowParams.HEIGHT // 2 - 200, x=WindowParams.WIDTH//2 + 180, button_call=window_screen, width=300, height=75),
+        ButtonMenu(f'Увеличенное здоровье', WindowParams.HEIGHT // 2, x=WindowParams.WIDTH//2 - 180, button_call=change_health_bar_big, width=300, height=75),
+        ButtonMenu(f'Уменьшенное здоровье', WindowParams.HEIGHT // 2, x=WindowParams.WIDTH//2 + 180, button_call=change_health_bar_small, width=300, height=75)
     )
     button_back_group = pygame.sprite.Group(
-        ButtonBack('Back', WindowParams.HEIGHT // 2 + 325, 200)
+        ButtonBack('Назад', WindowParams.HEIGHT // 2 + 325, 200)
     )
     text_options_group = pygame.sprite.Group(
-        TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 300, 'Resolution', Color.WHITE),
-        TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 100, 'Game parameters ', Color.WHITE)
+        TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 300, 'Расширение', Color.WHITE),
+        TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 100, 'Игровые параметры ', Color.WHITE)
     )
     while True:
         options_screen.fill(Color.BLACK)

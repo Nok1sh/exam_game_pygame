@@ -1,6 +1,7 @@
 import pygame
+import os
 import json
-from structures_and_parameters.structures_on_each_level import Rooms
+from structures_and_parameters.parameters_rooms_and_structures import Rooms
 from structures_and_parameters.enemies_on_each_levels import GetEnemiesStructure
 from structures_and_parameters.parameters_game import WindowParams, Color, ActionParams
 from objects.groups_objects import (player_group, walls_group, add_magic_ball, magic_balls, bars, projectiles,
@@ -11,6 +12,9 @@ pygame.init()
 
 
 def main_game_loop() -> None:
+    """
+    Gameplay processing function
+    """
     restart_game()
     Rooms.FLAG_LOAD_SAVE = False
     enemies_by_room = GetEnemiesStructure.ENEMIES
@@ -26,10 +30,13 @@ def main_game_loop() -> None:
                         ActionParams.LAST_MAGIC_BALLS = pygame.time.get_ticks()
                 elif event.key == pygame.K_ESCAPE:
                     options_in_game()
+
+        # check gameplay
         if not player.is_life or WindowParams.FLAG_RETURN_TO_MAIN_MENU:
             WindowParams.FLAG_RETURN_TO_MAIN_MENU = False
             return
 
+        # save each passing the level
         if Rooms.FLAG_SWAP_LEVEL:
             walls_room = walls_group(Rooms.ROOM)
             GetEnemiesStructure.update_level()
@@ -43,17 +50,20 @@ def main_game_loop() -> None:
                 "speed_hero": player.speed_move,
                 "number_level": Rooms.NUMBER_LEVEL
             }
-            with open("../exam_game_pygame/saves/save.json", "w", encoding="utf-8") as file:
+            if not os.path.exists("../saves"):
+                os.mkdir("../saves")
+            with open("../saves/save.json", "w", encoding="utf-8") as file:
                 json.dump(save_to_continue_level, file, indent=4, ensure_ascii=False)
 
         WindowParams.SCREEN.fill(Color.BLACK)
-        #Floor.floor(WindowParams.SCREEN)
+        Floor.floor(WindowParams.SCREEN)
         walls_room = walls_group(Rooms.ROOM)
         current_enemies = enemies_by_room.get(Rooms.ROOM)
-        # current_enemies = None
         current_portal = Rooms.PORTAL_AND_STAND.get(Rooms.ROOM)
         current_structures = Rooms.LEVEL_STRUCTURE.get(Rooms.ROOM)
         tent_structure = Rooms.TENT.get(Rooms.ROOM)
+
+        # update enemies for each room
         if current_enemies:
             if current_structures:
                 current_enemies.update(player, walls_room, magic_balls, projectiles, current_structures["coins"], current_structures["barrels"], current_structures["columns"])
@@ -68,9 +78,11 @@ def main_game_loop() -> None:
         else:
             Rooms.DOORS_FLAG = False
 
+        # update shop on each level
         if tent_structure:
             tent_structure.draw(WindowParams.SCREEN)
 
+        # update structures for each room
         if current_structures:
             current_structures["barrels"].draw(WindowParams.SCREEN)
             current_structures["barrels"].update(magic_balls, projectiles, player, current_structures["coins"], current_structures["potions"])
@@ -81,6 +93,8 @@ def main_game_loop() -> None:
             current_structures["potions"].draw(WindowParams.SCREEN)
 
             player_group.update(player, barrels=current_structures["barrels"], moneys=current_structures["coins"], columns=current_structures["columns"], potions=current_structures["potions"])
+
+        # update portal and portal stand
         if current_portal:
             portal_stand.draw(WindowParams.SCREEN)
             if [len(group) for group in enemies_by_room.values()].count(0) == len(enemies_by_room.values()):
@@ -91,6 +105,8 @@ def main_game_loop() -> None:
                 player_group.update(player, walls=walls_room, tent=tent_structure)
         else:
             player_group.update(player, walls=walls_room, tent=tent_structure)
+
+        # update other objects
         magic_balls.update(walls_room)
         bars.update()
         magic_balls.draw(WindowParams.SCREEN)
@@ -99,12 +115,18 @@ def main_game_loop() -> None:
         walls_group(Rooms.ROOM).draw(WindowParams.SCREEN)
         bars.draw(WindowParams.SCREEN)
         text_score_money.draw_score_money(player.score, WindowParams.SCREEN)
+
         pygame.display.flip()
         ActionParams.CLOCK.tick(ActionParams.FPS)
 
 
-def continue_from_the_save():
-    with open("../exam_game_pygame/saves/save.json", "r", encoding="utf-8") as file:
+def continue_from_the_save() -> None:
+    """
+    Function if the user chooses to continue the game from save
+    """
+    if not os.path.exists('../saves') or not os.path.exists('../saves/save.json'):
+        return
+    with open("../saves/save.json", "r", encoding="utf-8") as file:
         save_data = json.load(file)
         player.damage = save_data["player_attack_damage"]
         player.health_bar = save_data["player_health"]

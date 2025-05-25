@@ -4,12 +4,20 @@ from objects.groups_objects import buttons_main_menu_group
 from objects.interface_objects import ButtonMenu
 from game_windows.game_window import main_game_loop, continue_from_the_save
 from window_options import options_main_menu
+import sys
+from pathlib import Path
+
+
+sys.path.append(str(Path(__file__).parent.parent))
 pygame.init()
 
 Textures.load_all()
 
 
 def pass_button():
+    """
+    For test button
+    """
     pass
 
 

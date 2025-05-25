@@ -34,8 +34,6 @@ bars = pygame.sprite.Group(
 
 projectiles = pygame.sprite.Group()
 
-
-
 portal = pygame.sprite.Group(
     Portal()
 )
