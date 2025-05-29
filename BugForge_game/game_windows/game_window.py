@@ -122,8 +122,6 @@ def main_game_loop() -> None:
 
         pygame.display.flip()
         ActionParams.CLOCK.tick(ActionParams.FPS)
-        fps = ActionParams.CLOCK.get_fps()
-        pygame.display.set_caption(f"BugForge - FPS: {int(fps)}")
 
 
 def continue_from_the_save() -> None:
