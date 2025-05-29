@@ -49,5 +49,5 @@ text_score_money = TextOnWindowForGame(85, 15)
 def restart_game():
     player.restart_parameters()
     GetEnemiesStructure.restart_game()
-    for magic_ball in magic_balls:
-        magic_ball.kill()
+    magic_balls.empty()
+    projectiles.empty()

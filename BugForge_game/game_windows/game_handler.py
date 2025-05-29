@@ -3,12 +3,7 @@ from structures_and_parameters.parameters_game import WindowParams, Color, Textu
 from objects.groups_objects import buttons_main_menu_group
 from objects.interface_objects import ButtonMenu
 from game_windows.game_window import main_game_loop, continue_from_the_save
-from window_options import options_main_menu
-import sys
-from pathlib import Path
-
-
-sys.path.append(str(Path(__file__).parent.parent))
+from game_windows.window_options import options_main_menu
 pygame.init()
 
 Textures.load_all()
@@ -40,6 +35,3 @@ def main_menu_loop() -> None:
             btn.draw(WindowParams.SCREEN)
         pygame.display.flip()
 
-
-if __name__ == "__main__":
-    main_menu_loop()

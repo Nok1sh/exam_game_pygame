@@ -22,7 +22,7 @@ class Doors(pygame.sprite.Sprite):
     def __init__(self, line: str, x=None, y=None):
         super().__init__()
         self.size_door: int = 2
-        self.image = pygame.image.load(f"../textures/door_{line}.png")
+        self.image = pygame.image.load(f"textures/door_{line}.png")
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_door, self.image.get_height() // self.size_door))
         if line == 'vertical':
             self.rect = self.image.get_rect()
@@ -32,13 +32,28 @@ class Doors(pygame.sprite.Sprite):
             self.rect.center = (WindowParams.WIDTH//2, y)
 
 
+# class Floor:
+#     @staticmethod
+#     def floor(screen):
+#         tile_width, tile_height = Textures.FLOOR.get_size()
+#         for tx in range(0, WindowParams.WIDTH, tile_width):
+#             for ty in range(0, WindowParams.HEIGHT, tile_height):
+#                 screen.blit(Textures.FLOOR, (tx, ty))
+
 class Floor:
+    surface = None
+
     @staticmethod
-    def floor(screen):
-        tile_width, tile_height = Textures.FLOOR.get_size()
-        for tx in range(0, WindowParams.WIDTH, tile_width):
-            for ty in range(0, WindowParams.HEIGHT, tile_height):
-                screen.blit(Textures.FLOOR, (tx, ty))
+    def init(screen_width, screen_height):
+        tile = Textures.FLOOR
+        Floor.surface = pygame.Surface((screen_width, screen_height))
+        for tx in range(0, screen_width, tile.get_width()):
+            for ty in range(0, screen_height, tile.get_height()):
+                Floor.surface.blit(tile, (tx, ty))
+
+    @staticmethod
+    def draw(screen):
+        screen.blit(Floor.surface, (0, 0))
 
 
 class ManaBar(pygame.sprite.Sprite):
@@ -47,7 +62,7 @@ class ManaBar(pygame.sprite.Sprite):
         self.player = player
         self.size_width: int = 2
         self.size_height: int = 3
-        self.image = pygame.image.load("../textures/manabar/manabar_5.png")
+        self.image = pygame.image.load("textures/manabar/manabar_5.png")
         self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_width, self.image.get_height()//self.size_height))
         self.rect = self.image.get_rect()
         self.rect.x = 10
@@ -75,9 +90,9 @@ class HealthBar(pygame.sprite.Sprite):
         self.player = player
         self.size_width: int = 2
         self.size_height: int = 3
-        self.image = pygame.image.load("../textures/healthbar2/healthbar_4.png").convert_alpha() \
+        self.image = pygame.image.load("textures/healthbar2/healthbar_4.png").convert_alpha() \
             if ActionParams.FLAG_UPPER_HEALTH_BAR \
-            else pygame.image.load("../textures/healthbar/healthbar_3.png").convert_alpha()
+            else pygame.image.load("textures/healthbar/healthbar_3.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_width, self.image.get_height() // self.size_height))
         self.rect = self.image.get_rect()
         self.rect.y = WindowParams.HEIGHT - 45
@@ -99,7 +114,7 @@ class MoneyBar(pygame.sprite.Sprite):
         super().__init__()
         self.size_width: int = 1
         self.size_height: int = 2
-        self.image = pygame.image.load("../textures/money_bar.png").convert_alpha()
+        self.image = pygame.image.load("textures/money_bar.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_width, self.image.get_height() // self.size_height))
         self.rect = self.image.get_rect()
         self.rect.center = (135, 22)
@@ -109,7 +124,7 @@ class Tent(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.size_tent: int = 5
-        self.image = pygame.image.load("../textures/store/tent.png").convert_alpha()
+        self.image = pygame.image.load("textures/store/tent.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_tent, self.image.get_height() // self.size_tent))
         self.rect = self.image.get_rect()
         self.rect.center = (WindowParams.WIDTH//2, WindowParams.HEIGHT//2)
@@ -119,7 +134,7 @@ class Trader(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.size: int = 1
-        self.image = pygame.image.load("../textures/store/steampunk_trader.png").convert_alpha()
+        self.image = pygame.image.load("textures/store/steampunk_trader.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size, self.image.get_height() // self.size))
         self.rect = self.image.get_rect()
         self.rect.center = ((WindowParams.WIDTH//4)*3-50, WindowParams.HEIGHT//2+100)
@@ -128,7 +143,7 @@ class Trader(pygame.sprite.Sprite):
 class StoreMenu(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("../textures/store/store_menu.png").convert_alpha()
+        self.image = pygame.image.load("textures/store/store_menu.png").convert_alpha()
         self.image = pygame.transform.scale(self.image,
                                                 (self.image.get_width() * 1.5, self.image.get_height() // 1))
         self.rect = self.image.get_rect()
@@ -139,7 +154,7 @@ class Portal(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.size_portal: int = 4
-        self.image = pygame.image.load(f"../textures/portals/portal_1.png").convert_alpha()
+        self.image = pygame.image.load(f"textures/portals/portal_1.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_portal, self.image.get_height()//self.size_portal))
         self.rect = self.image.get_rect()
         self.rect.center = (WindowParams.WIDTH//2, WindowParams.HEIGHT//4+100)
@@ -160,7 +175,7 @@ class PortalStand(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.size_portal: int = 3
-        self.image = pygame.image.load("../textures/portal_stand.png")
+        self.image = pygame.image.load("textures/portal_stand.png")
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_portal, self.image.get_height() // self.size_portal))
         self.rect = self.image.get_rect()
         self.rect.center = (WindowParams.WIDTH // 2, WindowParams.HEIGHT // 3+100)
@@ -170,7 +185,7 @@ class Barrel(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
         super().__init__()
         self.size_barrel: int = 5
-        self.image = pygame.image.load("../textures/barrel.png").convert_alpha()
+        self.image = pygame.image.load("textures/barrel.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_barrel, self.image.get_height() // self.size_barrel))
         self.rect = self.image.get_rect()
         self.x: int = x
@@ -201,7 +216,7 @@ class Column(pygame.sprite.Sprite):
         self.x: int = x
         self.y: int = y
         self.random_image = random_image
-        self.image = pygame.image.load(f"../textures/columns/column_{self.random_image}.png").convert_alpha()
+        self.image = pygame.image.load(f"textures/columns/column_{self.random_image}.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_column, self.image.get_height() // self.size_column))
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
@@ -215,7 +230,7 @@ class Coin(pygame.sprite.Sprite):
         super().__init__()
         self.size: int = 3
         self.score: int = 50
-        self.image = pygame.image.load("../textures/coin/money_1.png").convert_alpha()
+        self.image = pygame.image.load("textures/coin/money_1.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size, self.image.get_height()//self.size))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -237,7 +252,7 @@ class Potion(pygame.sprite.Sprite):
         super().__init__()
         self.name: str = name
         self.size_potion: int = 20
-        self.image = pygame.image.load(f"../textures/potions/{name}_potion.png")
+        self.image = pygame.image.load(f"textures/potions/{name}_potion.png")
         self.image = pygame.transform.scale(self.image,(self.image.get_width() // self.size_potion, self.image.get_height() // self.size_potion))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -320,31 +335,40 @@ class ButtonBack(Button, pygame.sprite.Sprite):
             self.flag_back = True
 
 
-class TextOnWindowForGame(pygame.sprite.Sprite):
+class TextOnWindow(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
         super().__init__()
         self.x: int = x
         self.y: int = y
 
-    def draw_score_money(self, score_money: int, screen):
-        style_text = pygame.font.SysFont('arial', 24)
-        score_text = style_text.render(f'SCORE: {score_money}', 1, Color.YELLOW)
+    def draw(self):
+        pass
+
+
+class TextOnWindowForGame(TextOnWindow, pygame.sprite.Sprite):
+    def __init__(self, x: int, y: int):
+        pygame.sprite.Sprite.__init__(self)
+        TextOnWindow.__init__(self, x, y)
+        self.size: int = 24
+        self.style_text = pygame.font.SysFont('arial', self.size)
+
+    def draw_text(self, score_money: int, screen):
+        score_text = self.style_text.render(f'SCORE: {score_money}', True, Color.YELLOW)
         screen.blit(score_text, (self.x, self.y))
 
 
-class TextOnWindowForOptions(pygame.sprite.Sprite):
+class TextOnWindowForOptions(TextOnWindow, pygame.sprite.Sprite):
     def __init__(self, x: int, y: int, text: str, color: tuple, size=None):
-        super().__init__()
-        self.x: int = x
-        self.y: int = y
+        pygame.sprite.Sprite.__init__(self)
+        TextOnWindow.__init__(self, x, y)
         self.text: str = text
         self.color: tuple = color
         self.size: int = size if size else 48
+        self.style_text = pygame.font.SysFont('arial', self.size)
+        self.text = self.style_text.render(self.text, True, self.color)
+        self.position = self.text.get_rect(center=(self.x, self.y))
 
     def draw_text(self, screen) -> None:
-        style_text = pygame.font.SysFont('arial', self.size)
-        text = style_text.render(self.text, True, self.color)
-        position = text.get_rect(center=(self.x, self.y))
-        screen.blit(text, position)
+        screen.blit(self.text, self.position)
 
 

@@ -7,7 +7,7 @@ from structures_and_parameters.parameters_game import WindowParams, Color, Actio
 from objects.groups_objects import (player_group, walls_group, add_magic_ball, magic_balls, bars, projectiles,
                                     portal, portal_stand, player, restart_game, Floor,
                                     text_score_money, HealthBar)
-from window_options import options_in_game
+from game_windows.window_options import options_in_game
 pygame.init()
 
 
@@ -15,9 +15,12 @@ def main_game_loop() -> None:
     """
     Gameplay processing function
     """
+    Floor.init(WindowParams.WIDTH, WindowParams.HEIGHT)
     restart_game()
     Rooms.FLAG_LOAD_SAVE = False
     enemies_by_room = GetEnemiesStructure.ENEMIES
+    Floor.draw(WindowParams.SCREEN)
+    current_room = -1
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -50,18 +53,19 @@ def main_game_loop() -> None:
                 "speed_hero": player.speed_move,
                 "number_level": Rooms.NUMBER_LEVEL
             }
-            if not os.path.exists("../saves"):
-                os.mkdir("../saves")
-            with open("../saves/save.json", "w", encoding="utf-8") as file:
+            if not os.path.exists("saves"):
+                os.mkdir("saves")
+            with open("saves/save.json", "w", encoding="utf-8") as file:
                 json.dump(save_to_continue_level, file, indent=4, ensure_ascii=False)
 
-        WindowParams.SCREEN.fill(Color.BLACK)
-        Floor.floor(WindowParams.SCREEN)
-        walls_room = walls_group(Rooms.ROOM)
-        current_enemies = enemies_by_room.get(Rooms.ROOM)
-        current_portal = Rooms.PORTAL_AND_STAND.get(Rooms.ROOM)
-        current_structures = Rooms.LEVEL_STRUCTURE.get(Rooms.ROOM)
-        tent_structure = Rooms.TENT.get(Rooms.ROOM)
+        if current_room != Rooms.ROOM:
+            current_room = Rooms.ROOM
+            walls_room = walls_group(Rooms.ROOM)
+            current_enemies = enemies_by_room.get(Rooms.ROOM)
+            current_portal = Rooms.PORTAL_AND_STAND.get(Rooms.ROOM)
+            current_structures = Rooms.LEVEL_STRUCTURE.get(Rooms.ROOM)
+            tent_structure = Rooms.TENT.get(Rooms.ROOM)
+        Floor.draw(WindowParams.SCREEN)
 
         # update enemies for each room
         if current_enemies:
@@ -114,19 +118,21 @@ def main_game_loop() -> None:
         player_group.draw(WindowParams.SCREEN)
         walls_group(Rooms.ROOM).draw(WindowParams.SCREEN)
         bars.draw(WindowParams.SCREEN)
-        text_score_money.draw_score_money(player.score, WindowParams.SCREEN)
+        text_score_money.draw_text(player.score, WindowParams.SCREEN)
 
         pygame.display.flip()
         ActionParams.CLOCK.tick(ActionParams.FPS)
+        fps = ActionParams.CLOCK.get_fps()
+        pygame.display.set_caption(f"BugForge - FPS: {int(fps)}")
 
 
 def continue_from_the_save() -> None:
     """
     Function if the user chooses to continue the game from save
     """
-    if not os.path.exists('../saves') or not os.path.exists('../saves/save.json'):
+    if not os.path.exists('saves') or not os.path.exists('saves/save.json'):
         return
-    with open("../saves/save.json", "r", encoding="utf-8") as file:
+    with open("saves/save.json", "r", encoding="utf-8") as file:
         save_data = json.load(file)
         player.damage = save_data["player_attack_damage"]
         player.health_bar = save_data["player_health"]

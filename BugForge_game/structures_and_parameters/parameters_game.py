@@ -17,7 +17,7 @@ class WindowParams:
         (WIDTH, HEIGHT),
         pygame.SHOWN
     )
-    icon_game = pygame.image.load("../textures/hero/hero.png")
+    icon_game = pygame.image.load("textures/hero/hero.png")
     pygame.display.set_icon(icon_game)
     pygame.display.set_caption("Bugforge")
 
@@ -70,28 +70,38 @@ class Color:
 
 class Textures:
     _loaded = False
+    hero_size_width: int = 9
+    hero_size_height: int = 8
 
     @classmethod
     def load_all(cls):
         if cls._loaded:
             return
-        cls.WALL = pygame.image.load("../textures/wall.png").convert()
-        #cls.FLOOR = pygame.image.load("../textures/floor.png").convert()
-        cls.MAGIC_BALL_BIG = pygame.image.load("../textures/magicballs/magicball_big.png").convert_alpha()
-        cls.MAGIC_BALL_SMALL = pygame.image.load("../textures/magicballs/magicball_small.png").convert_alpha()
-        cls.MAGIC_BALL_BIG_ENEMY = pygame.image.load("../textures/magicballs/magicball_enemy_big.png").convert_alpha()
-        cls.MAGIC_BALL_SMALL_ENEMY = pygame.image.load("../textures/magicballs/magicball_enemy_small.png").convert_alpha()
-        cls.MANA_BARS = [pygame.image.load(f"../textures/manabar/manabar_{number}.png").convert_alpha() for number in range(6)]
-        cls.HEALTH_BARS = [pygame.image.load(f"../textures/healthbar/healthbar_{number}.png").convert_alpha() for number in range(4)]
-        cls.HEALTH_BARS_BIG = [pygame.image.load(f"../textures/healthbar2/healthbar_{number}.png").convert_alpha() for number in range(5)]
-        cls.MONEY_BAR = pygame.image.load("../textures/money_bar.png").convert_alpha()
-        cls.PORTAL: list = [pygame.image.load(f"../textures/portals/portal_{number}.png").convert_alpha() for number in range(1, 17)]
-        cls.PORTAL_STAND = pygame.image.load("../textures/portal_stand.png")
-        cls.COIN = [pygame.image.load(f"../textures/coin/money_{number}.png").convert_alpha() for number in range(1, 7)]
-        cls.COLUMN = [pygame.image.load(f"../textures/columns/column_{number}.png").convert_alpha() for number in range(1, 7)]
-        cls.MELEE_ENEMY = [pygame.image.load(f"../textures/melee_enemy/melee_enemy_{number}.png").convert_alpha() for number in range(1, 6)]
-        cls.RANGE_ENEMY = [pygame.image.load(f"../textures/range_enemy/range_enemy_{number}.png").convert_alpha() for number in range(1, 27)]
-        #cls.PLAYER = pygame.image.load("player.png").convert_alpha()
-        cls.FLOOR = pygame.image.load(f"../textures/stone_floor.png")
+        cls.FLOOR = pygame.image.load(f"textures/stone_floor.png").convert()
+        cls.WALL = pygame.image.load("textures/wall.png").convert()
+        cls.MAGIC_BALL_BIG = pygame.image.load("textures/magicballs/magicball_big.png").convert_alpha()
+        cls.MAGIC_BALL_SMALL = pygame.image.load("textures/magicballs/magicball_small.png").convert_alpha()
+        cls.MAGIC_BALL_BIG_ENEMY = pygame.image.load("textures/magicballs/magicball_enemy_big.png").convert_alpha()
+        cls.MAGIC_BALL_SMALL_ENEMY = pygame.image.load("textures/magicballs/magicball_enemy_small.png").convert_alpha()
+        cls.MANA_BARS = [pygame.image.load(f"textures/manabar/manabar_{number}.png").convert_alpha() for number in range(6)]
+        cls.HEALTH_BARS = [pygame.image.load(f"textures/healthbar/healthbar_{number}.png").convert_alpha() for number in range(4)]
+        cls.HEALTH_BARS_BIG = [pygame.image.load(f"textures/healthbar2/healthbar_{number}.png").convert_alpha() for number in range(5)]
+        cls.MONEY_BAR = pygame.image.load("textures/money_bar.png").convert_alpha()
+        cls.PORTAL: list = [pygame.image.load(f"textures/portals/portal_{number}.png").convert_alpha() for number in range(1, 17)]
+        cls.PORTAL_STAND = pygame.image.load("textures/portal_stand.png").convert_alpha()
+        cls.COIN = [pygame.image.load(f"textures/coin/money_{number}.png").convert_alpha() for number in range(1, 7)]
+        cls.COLUMN = [pygame.image.load(f"textures/columns/column_{number}.png").convert_alpha() for number in range(1, 7)]
+        cls.MELEE_ENEMY = [pygame.image.load(f"textures/melee_enemy/melee_enemy_{number}.png").convert_alpha() for number in range(1, 6)]
+        cls.RANGE_ENEMY = [pygame.image.load(f"textures/range_enemy/range_enemy_{number}.png").convert_alpha() for number in range(1, 27)]
+        cls.PLAYER = [pygame.image.load(f"textures/hero/hero_move{number}.png").convert_alpha() for number in range(1, 17)]
+        cls.PLAYER_HORIZONTAL = {number: pygame.transform.scale(cls.PLAYER[number-1],
+                                                                (cls.PLAYER[number-1].get_width()//cls.hero_size_height,
+                                                                 cls.PLAYER[number-1].get_height()//cls.hero_size_width)).convert_alpha() for number in [5, 6, 15, 16]}
+        cls.PLAYER_VERTICAL = {number: pygame.transform.scale(cls.PLAYER[number - 1],
+                                                                (cls.PLAYER[number - 1].get_width() // cls.hero_size_width,
+                                                                 cls.PLAYER[number - 1].get_height() // cls.hero_size_height)).convert_alpha() for number in [1, 2, 7, 8]}
+        cls.PLAYER_DIAGONAL = {number: pygame.transform.scale(cls.PLAYER[number - 1],
+                                                              (cls.PLAYER[number - 1].get_width() // cls.hero_size_width,
+                                                              cls.PLAYER[number - 1].get_height() // cls.hero_size_width)).convert_alpha() for number in [3, 4, 9, 10, 11, 12, 13, 14]}
 
         cls._loaded = True

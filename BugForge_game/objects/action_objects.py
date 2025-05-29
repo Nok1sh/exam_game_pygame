@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.height: int = 50
         self.size_width: int = 9
         self.size_height: int = 8
-        self.image = pygame.image.load("../textures/hero/hero.png").convert_alpha()
+        self.image = pygame.image.load("textures/hero/hero.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_width, self.image.get_height()//self.size_height))
         self.rect = self.image.get_rect()
         self.rect.center = (WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2)
@@ -115,17 +115,13 @@ class Player(pygame.sprite.Sprite):
         """
         Changing the image of the hero when moving
         """
-        self.image = pygame.image.load(
-            f"../textures/hero/hero_move{number}.png").convert_alpha()
+        self.image = Textures.PLAYER[number-1]
         if line == "horizontal":
-            self.image = pygame.transform.scale(self.image,
-                                                (self.image.get_width() // self.size_height, self.image.get_height() // self.size_width))
+            self.image = Textures.PLAYER_HORIZONTAL[number]
         elif line == "vertical":
-            self.image = pygame.transform.scale(self.image,
-                                                (self.image.get_width() // self.size_height, self.image.get_height() // self.size_width))
+            self.image = Textures.PLAYER_VERTICAL[number]
         else:
-            self.image = pygame.transform.scale(self.image,
-                                                (self.image.get_width() // self.size_width, self.image.get_height() // self.size_width))
+            self.image = Textures.PLAYER_DIAGONAL[number]
 
     def __animation_move_hero(self, line: str, direction: str) -> None:
         """
@@ -481,7 +477,7 @@ class MeleeEnemy(Enemy, pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         Enemy.__init__(self, x, y)
         self.size_melee_enemy: int = 10
-        self.image = pygame.image.load(f"../textures/melee_enemy/melee_enemy_1.png").convert_alpha()
+        self.image = pygame.image.load(f"textures/melee_enemy/melee_enemy_1.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_melee_enemy, self.image.get_height()//self.size_melee_enemy))
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
@@ -543,7 +539,7 @@ class RangeEnemy(Enemy, pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         Enemy.__init__(self, x, y)
         self.size_range_enemy: int = 22
-        self.image = pygame.image.load(f"../textures/range_enemy/range_enemy_1.png").convert_alpha()
+        self.image = pygame.image.load(f"textures/range_enemy/range_enemy_1.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_range_enemy, self.image.get_height() // self.size_range_enemy))
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
