@@ -140,7 +140,7 @@ def store_menu(player) -> None:
             update_score_image()
 
     button_back_group = pygame.sprite.Group(
-        ButtonBack('Back', WindowParams.HEIGHT // 2 + 250, 300)
+        ButtonBack('Назад', WindowParams.HEIGHT // 2 + 250, 300)
     )
     text_options_group = pygame.sprite.Group(
         TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 300, 'CURIOSITY SHOP', Color.WHITE),

@@ -40,6 +40,8 @@ class Player(pygame.sprite.Sprite):
         self.damage: float = 1.5
         self.is_life: bool = True
         self.score: int = 0
+        self.health_potion: int = 1
+        self.mana_potion: int = 3
         self.animation_lines: Dict[str, int] = {
             "top": 1, "right_top": 3, "right": 5, "bottom": 7, "left_top": 9,
             "right_bottom": 11, "left_bottom": 13, "left": 15
@@ -278,12 +280,12 @@ class Player(pygame.sprite.Sprite):
         for potion in potions_collision:
             if self.rect.collidepoint(potion.rect.center):
                 if potion.name == "health":
-                    current_health = self.health_bar + 1
+                    current_health = self.health_bar + self.health_potion
                     if current_health >= self.max_health:
                         current_health = self.max_health
                     self.health_bar = current_health
                 elif potion.name == "mana":
-                    current_mana = self.mana_pool + 2
+                    current_mana = self.mana_pool + self.mana_potion
                     if current_mana >= self.max_mana:
                         current_mana = self.max_mana
                     self.mana_pool = current_mana
@@ -609,7 +611,9 @@ class RangeBossEnemy(RangeEnemy, pygame.sprite.Sprite):
         RangeEnemy.__init__(self, x, y)
         self.width: int = 70
         self.height: int = 70
-        self.image = pygame.Surface([self.width, self.height])
+        self.size_boss_range_enemy: int = 10
+        self.image = pygame.image.load(f"textures/boss_range_enemy/boss_range_enemy1.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_boss_range_enemy, self.image.get_height() // self.size_boss_range_enemy))
         self.rect = self.image.get_rect()
         self.x: int = x
         self.y: int = y
@@ -621,8 +625,22 @@ class RangeBossEnemy(RangeEnemy, pygame.sprite.Sprite):
         self.distance_attack: int = 500
         self.max_health: float = 25
         self.current_health: float = self.max_health
+        self.number_image: int = 1
+        self.animation_range_enemy: int = 0
+        self.speed_rotation: int = 10
+
+    def swap_image(self):
+        self.image = Textures.BOSS_RANGE_ENEMY[self.number_image - 1]
+        self.image = pygame.transform.scale(self.image, (
+        self.image.get_width() // self.size_boss_range_enemy, self.image.get_height() // self.size_boss_range_enemy))
 
     def move_towards_player(self, player, walls) -> None:
+        self.animation_range_enemy += ActionParams.TIME_ANIMATION_MELEE_ENEMY
+        if self.animation_range_enemy >= 1 / self.speed_rotation:
+            self.animation_range_enemy -= 1.0 / self.speed_rotation
+            self.swap_image()
+            self.number_image = self.number_image % 24 + 1
+
         distance_x: int = player.rect.x - self.rect.x
         distance_y: int = player.rect.y - self.rect.y
         distance: float = math.sqrt(distance_x**2 + distance_y**2)

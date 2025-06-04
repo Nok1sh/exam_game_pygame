@@ -3,7 +3,7 @@ import os
 import json
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
 from structures_and_parameters.enemies_on_each_levels import GetEnemiesStructure
-from structures_and_parameters.parameters_game import WindowParams, Color, ActionParams
+from structures_and_parameters.parameters_game import WindowParams, ActionParams
 from objects.groups_objects import (player_group, walls_group, add_magic_ball, magic_balls, bars, projectiles,
                                     portal, portal_stand, player, restart_game, Floor,
                                     text_score_money, HealthBar)
@@ -122,6 +122,8 @@ def main_game_loop() -> None:
 
         pygame.display.flip()
         ActionParams.CLOCK.tick(ActionParams.FPS)
+        # fps = ActionParams.CLOCK.get_fps()
+        # pygame.display.set_caption(f"BugForge - FPS: {int(fps)}")
 
 
 def continue_from_the_save() -> None:

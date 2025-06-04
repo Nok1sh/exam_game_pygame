@@ -93,6 +93,7 @@ class Textures:
         cls.COLUMN = [pygame.image.load(f"textures/columns/column_{number}.png").convert_alpha() for number in range(1, 7)]
         cls.MELEE_ENEMY = [pygame.image.load(f"textures/melee_enemy/melee_enemy_{number}.png").convert_alpha() for number in range(1, 6)]
         cls.RANGE_ENEMY = [pygame.image.load(f"textures/range_enemy/range_enemy_{number}.png").convert_alpha() for number in range(1, 27)]
+        cls.BOSS_RANGE_ENEMY = [pygame.image.load(f"textures/boss_range_enemy/boss_range_enemy{number}.png").convert_alpha() for number in range(1, 25)]
         cls.PLAYER = [pygame.image.load(f"textures/hero/hero_move{number}.png").convert_alpha() for number in range(1, 17)]
         cls.PLAYER_HORIZONTAL = {number: pygame.transform.scale(cls.PLAYER[number-1],
                                                                 (cls.PLAYER[number-1].get_width()//cls.hero_size_height,
