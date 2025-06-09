@@ -77,6 +77,18 @@ class Textures:
     def load_all(cls):
         if cls._loaded:
             return
+        cls.BACKGROUND_MAIN_MENU_IMAGE = pygame.image.load("textures/main_menu_textures/background_main_menu.jpg").convert()
+        cls.BACKGROUND_MAIN_MENU = pygame.transform.scale(
+            cls.BACKGROUND_MAIN_MENU_IMAGE,
+            (cls.BACKGROUND_MAIN_MENU_IMAGE.get_width(),
+                cls.BACKGROUND_MAIN_MENU_IMAGE.get_height())
+        )
+        cls.TABLET_MAIN_MENU_IMAGE = pygame.image.load("textures/main_menu_textures/tablet.png").convert_alpha()
+        cls.TABLET_MAIN_MENU = pygame.transform.scale(
+            cls.TABLET_MAIN_MENU_IMAGE,
+            (cls.TABLET_MAIN_MENU_IMAGE.get_width()//2,
+             cls.TABLET_MAIN_MENU_IMAGE.get_height()//2)
+        )
         cls.FLOOR = pygame.image.load(f"textures/stone_floor.png").convert()
         cls.WALL = pygame.image.load("textures/wall.png").convert()
         cls.MAGIC_BALL_BIG = pygame.image.load("textures/magicballs/magicball_big.png").convert_alpha()
