@@ -1,7 +1,7 @@
 import pygame
 from structures_and_parameters.parameters_game import WindowParams, Color, Textures
 from objects.groups_objects import buttons_main_menu_group
-from objects.interface_objects import ButtonMenu
+from objects.ui.buttons import ButtonMenu
 from game_windows.game_window import main_game_loop, continue_from_the_save
 from game_windows.window_options import options_main_menu
 pygame.init()

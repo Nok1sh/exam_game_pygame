@@ -1,7 +1,8 @@
 import pygame
 import random
 from typing import Dict
-from objects.interface_objects import Barrel, Column, Coin
+from objects.world_objects.world_structures import Barrel, Column
+from objects.world_objects.coin import Coin
 from structures_and_parameters.parameters_game import WindowParams
 
 

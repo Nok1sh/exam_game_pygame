@@ -2,7 +2,7 @@ import pygame
 from typing import Dict
 from structures_and_parameters.parameters_game import WindowParams
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
-from objects.action_objects import MeleeEnemy, RangeEnemy, RangeBossEnemy
+from objects.action_objects.enemies_direction.enemies_model import MeleeEnemy, RangeEnemy, RangeBossEnemy
 
 
 class EnemiesStructure(pygame.sprite.Sprite):

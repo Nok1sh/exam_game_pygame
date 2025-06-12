@@ -1,8 +1,9 @@
 import pygame
 from structures_and_parameters.parameters_game import WindowParams, Color, ActionParams
-from objects.interface_objects import TextOnWindowForOptions, ButtonMenu, ButtonBack, ButtonAction, StoreMenu, Trader, HealthBar
-import importlib
-import structures_and_parameters.rooms
+from objects.ui.bars import HealthBar
+from objects.ui.text import TextOnWindowForOptions
+from objects.ui.store import StoreMenu, Trader
+from objects.ui.buttons import ButtonMenu, ButtonBack, ButtonAction
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
 
 options_screen = pygame.display.set_mode(

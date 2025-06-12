@@ -1,7 +1,7 @@
 import pygame
 import random
 from typing import Dict, List, Tuple
-from objects.interface_objects import Portal, PortalStand, Doors, Tent
+from objects.world_objects.world_structures import Portal, PortalStand, Doors, Tent
 from structures_and_parameters.parameters_game import WindowParams, ActionParams
 from structures_and_parameters.structures import get_structures
 

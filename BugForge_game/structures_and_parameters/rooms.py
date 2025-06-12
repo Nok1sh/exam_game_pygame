@@ -1,5 +1,5 @@
 import pygame
-from objects.interface_objects import Walls
+from objects.world_objects.world_structures import Walls
 from structures_and_parameters.parameters_game import WindowParams, Textures
 
 
