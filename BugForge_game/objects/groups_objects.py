@@ -1,7 +1,10 @@
 import pygame
 from structures_and_parameters.enemies_on_each_levels import GetEnemiesStructure
-from objects.action_objects import Player, MagicBall
-from objects.interface_objects import ManaBar, HealthBar, Portal, PortalStand, Floor, MoneyBar, TextOnWindowForGame
+from objects.action_objects.projectiles_direction.magic_balls_model import MagicBall
+from .action_objects.player_direction.player_model import Player
+from objects.world_objects.world_structures import Portal, PortalStand
+from .ui.bars import MoneyBar, ManaBar, HealthBar
+from .ui.text import TextOnWindowForGame
 from structures_and_parameters.rooms import room_number
 
 buttons_main_menu_group = pygame.sprite.Group()
