@@ -13,12 +13,10 @@ options_screen = pygame.display.set_mode(
 
 def fullscreen() -> None:
     WindowParams.update_screen(size_fullscreen=True)
-    #importlib.reload(structures_and_parameters.rooms)
 
 
 def window_screen() -> None:
     WindowParams.update_screen()
-    #importlib.reload(structures_and_parameters.rooms)
 
 
 def change_health_bar_big():

@@ -1,7 +1,6 @@
 import pygame
 import time
-from typing import Dict
-from structures_and_parameters.parameters_game import WindowParams, Textures, ActionParams
+from structures_and_parameters.parameters_game import WindowParams, ActionParams
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
 from game_windows.window_options import store_menu
 
@@ -9,14 +8,14 @@ from game_windows.window_options import store_menu
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.width: int = 50
-        self.height: int = 50
-        self.size_width: int = 9
-        self.size_height: int = 8
-        self.image = pygame.image.load("textures/hero/hero.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (self.image.get_width()//self.size_width, self.image.get_height()//self.size_height))
-        self.rect = self.image.get_rect()
-        self.rect.center = (WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2)
+        self.width_collision: int = 85
+        self.height_collision: int = 80
+        self.rect = pygame.Rect(
+            WindowParams.WIDTH // 2,
+            WindowParams.HEIGHT // 2,
+            self.width_collision,
+            self.height_collision
+        )
         self.speed_move: int = 5
         self.move_right = pygame.K_d
         self.move_left = pygame.K_a
@@ -24,6 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.move_down = pygame.K_s
         self.interaction_with_objects = pygame.K_e
         self.line_move: str = 'right'  # right, left, top, bottom, right_top, right_bottom, left_top, left_bottom
+        self.direction_move: str = 'diagonal'  # vertical, diagonal, horizontal
         self.diagonal_move_rate: float = 0.7071
         self.speed_x: int = 0
         self.speed_y: int = 0
@@ -39,20 +39,7 @@ class Player(pygame.sprite.Sprite):
         self.score: int = 0
         self.health_potion: int = 1
         self.mana_potion: int = 3
-        self.animation_lines: Dict[str, int] = {
-            "top": 1, "right_top": 3, "right": 5, "bottom": 7, "left_top": 9,
-            "right_bottom": 11, "left_bottom": 13, "left": 15
-        }
-        self.animation_moves: Dict[str, int] = {
-            "top": 0, "right_top": 0, "right": 0, "bottom": 0, "left_top": 0,
-            "right_bottom": 0, "left_bottom": 0, "left": 0
-        }
-        self.animation_lines_constant: Dict[str, tuple] = {
-            "top": (1, 2), "right_top": (3, 4), "right": (5, 6), "bottom": (7, 8), "left_top": (9, 10),
-            "right_bottom": (11, 12), "left_bottom": (13, 14), "left": (15, 16)
-        }
-        self.speed_animation: int = 10
-        self.animation_move: int = 0
+        self.flag_swap_image: bool = False
 
     def restart_parameters(self) -> None:
         """
@@ -110,30 +97,6 @@ class Player(pygame.sprite.Sprite):
             number_room: int = self.__generate_new_room()
         Rooms.ROOM = number_room
 
-    def __swap_image(self, number: int, line: str) -> None:
-        """
-        Changing the image of the hero when moving
-        """
-        self.image = Textures.PLAYER[number-1]
-        if line == "horizontal":
-            self.image = Textures.PLAYER_HORIZONTAL[number]
-        elif line == "vertical":
-            self.image = Textures.PLAYER_VERTICAL[number]
-        else:
-            self.image = Textures.PLAYER_DIAGONAL[number]
-
-    def __animation_move_hero(self, line: str, direction: str) -> None:
-        """
-        Handling hero animation when moving
-        """
-        self.animation_moves[line] += ActionParams.TIME_ANIMATION_HERO_MOVE
-        if self.animation_moves[line] >= 1 / self.speed_animation:
-            self.animation_moves[line] -= 1.0 / self.speed_animation
-            self.__swap_image(self.animation_lines[line], direction)
-            self.animation_lines[line] = self.animation_lines_constant[line][1] \
-                if self.animation_lines[line] == self.animation_lines_constant[line][0] \
-                else self.animation_lines_constant[line][0]
-
     def __update_moves_player(self) -> None:
         moves_player = pygame.key.get_pressed()
         self.speed_x: int = 0
@@ -142,39 +105,39 @@ class Player(pygame.sprite.Sprite):
         if moves_player[self.move_left] and moves_player[self.move_up]:
             self.speed_x = -self.speed_move * self.diagonal_move_rate
             self.speed_y = -self.speed_move * self.diagonal_move_rate
-            self.line_move = 'left_top'
-            self.__animation_move_hero("left_top", "diagonal")
+            self.line_move, self.direction_move = 'left_top', 'diagonal'
+            self.flag_swap_image = True
         elif moves_player[self.move_left] and moves_player[self.move_down]:
             self.speed_x = -self.speed_move * self.diagonal_move_rate
             self.speed_y = self.speed_move * self.diagonal_move_rate
-            self.line_move = 'left_bottom'
-            self.__animation_move_hero("left_bottom", "diagonal")
+            self.line_move, self.direction_move = 'left_bottom', 'diagonal'
+            self.flag_swap_image = True
         elif moves_player[self.move_right] and moves_player[self.move_up]:
             self.speed_x = self.speed_move * self.diagonal_move_rate
             self.speed_y = -self.speed_move * self.diagonal_move_rate
-            self.line_move = 'right_top'
-            self.__animation_move_hero("right_top", "diagonal")
+            self.line_move, self.direction_move = 'right_top', 'diagonal'
+            self.flag_swap_image = True
         elif moves_player[self.move_right] and moves_player[self.move_down]:
             self.speed_x = self.speed_move * self.diagonal_move_rate
             self.speed_y = self.speed_move * self.diagonal_move_rate
-            self.line_move = 'right_bottom'
-            self.__animation_move_hero("right_bottom", "diagonal")
+            self.line_move, self.direction_move = 'right_bottom', 'diagonal'
+            self.flag_swap_image = True
         elif moves_player[self.move_left]:
             self.speed_x = -self.speed_move
-            self.line_move = 'left'
-            self.__animation_move_hero("left", "horizontal")
+            self.line_move, self.direction_move = 'left', 'horizontal'
+            self.flag_swap_image = True
         elif moves_player[self.move_right]:
             self.speed_x = self.speed_move
-            self.line_move = 'right'
-            self.__animation_move_hero("right", "horizontal")
+            self.line_move, self.direction_move = 'right', 'horizontal'
+            self.flag_swap_image = True
         elif moves_player[self.move_up]:
             self.speed_y = -self.speed_move
-            self.line_move = 'top'
-            self.__animation_move_hero("top", "vertical")
+            self.line_move, self.direction_move = 'top', 'vertical'
+            self.flag_swap_image = True
         elif moves_player[self.move_down]:
             self.speed_y = self.speed_move
-            self.line_move = 'bottom'
-            self.__animation_move_hero("bottom", "vertical")
+            self.line_move, self.direction_move = 'bottom', 'vertical'
+            self.flag_swap_image = True
 
     def __update_walls(self, walls) -> None:
         size_door: int = 75

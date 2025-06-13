@@ -44,9 +44,10 @@ class ActionParams:
     LAST_MANA_RECOVERED: int = -10
     FPS: int = 60
     CLOCK = pygame.time.Clock()
+    DURATION_FADE_SWAP_LEVEL: int = 1500
     TIME_ANIMATION_MAGIC_BALL: float = CLOCK.tick(FPS) / 1000
     TIME_ANIMATION_MELEE_ENEMY: float = CLOCK.tick(FPS) / 1000
-    TIME_ANIMATION_HERO_MOVE: float = CLOCK.tick(FPS) / 3000
+    TIME_ANIMATION_HERO_MOVE: float = CLOCK.tick(FPS) / 1200
     TIME_ANIMATION_COIN: float = CLOCK.tick(FPS) / 1000
     TIME_ANIMATION_PORTAL: float = CLOCK.tick(FPS) / 750
     FLAG_UPPER_HEALTH_BAR: bool = True

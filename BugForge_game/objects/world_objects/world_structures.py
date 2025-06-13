@@ -1,8 +1,5 @@
 import pygame
 from structures_and_parameters.parameters_game import WindowParams, ActionParams, Textures
-from .potion import Potion
-from .coin import Coin
-import random
 
 
 class Walls(pygame.sprite.Sprite):
@@ -101,21 +98,6 @@ class Barrel(pygame.sprite.Sprite):
         self.rect.center = (self.x, self.y)
         self.health: int = 2
 
-    def update(self, magic_balls, projectiles, player, moneys_group, potions) -> None:
-        collision_enemy_magic_balls = pygame.sprite.spritecollide(self, projectiles, True)
-        collision_magic_balls = pygame.sprite.spritecollide(self, magic_balls, True)
-        if collision_magic_balls or collision_enemy_magic_balls:
-            self.health -= 1
-            if self.health <= 0:
-                self.kill()
-                chance_drop: float = random.random()
-                if chance_drop <= 0.2:
-                    moneys_group.add(Coin(self.x, self.y))
-                elif chance_drop <= 0.4:
-                    potions.add(Potion(self.x, self.y, "health"))
-                elif chance_drop <= 0.7:
-                    potions.add(Potion(self.x, self.y, "mana"))
-
 
 class Column(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int, random_image):
@@ -129,5 +111,3 @@ class Column(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
 
-    def update(self, magic_balls) -> None:
-        pygame.sprite.spritecollide(self, magic_balls, True)

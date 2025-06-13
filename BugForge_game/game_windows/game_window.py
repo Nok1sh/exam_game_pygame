@@ -2,11 +2,11 @@ import pygame
 import os
 import json
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
-from structures_and_parameters.enemies_on_each_levels import GetEnemiesStructure
+from structures_and_parameters.groups_of_enemies_model import GetEnemiesStructure
 from structures_and_parameters.parameters_game import WindowParams, ActionParams
-from objects.groups_objects import (player_group, walls_group, add_magic_ball, magic_balls, bars, projectiles,
+from objects.groups_objects import (player_group, walls_group, add_magic_ball, magic_balls_hero, bars, magic_ball_enemy,
                                     portal, portal_stand, player, restart_game,
-                                    text_score_money, HealthBar)
+                                    text_score_money, HealthBar, player_render_group)
 from objects.world_objects.world_structures import Floor
 from game_windows.window_options import options_in_game
 pygame.init()
@@ -20,6 +20,7 @@ def main_game_loop() -> None:
     restart_game()
     Rooms.FLAG_LOAD_SAVE = False
     enemies_by_room = GetEnemiesStructure.ENEMIES
+    Rooms.fade_swap_level()
     Floor.draw(WindowParams.SCREEN)
     current_room = -1
     while True:
@@ -71,15 +72,13 @@ def main_game_loop() -> None:
         # update enemies for each room
         if current_enemies:
             if current_structures:
-                current_enemies.update(player, walls_room, magic_balls, projectiles, current_structures["coins"], current_structures["barrels"], current_structures["columns"])
-                projectiles.update(current_enemies, player, walls_room, current_structures["barrels"], current_structures["columns"])
-                current_enemies.draw(WindowParams.SCREEN)
+                current_enemies.update(player, walls_room, magic_balls_hero, magic_ball_enemy, current_structures["coins"], current_structures["barrels"], current_structures["columns"])
+                magic_ball_enemy.update(walls_room, current_enemies, current_structures["barrels"], current_structures["columns"], player=player, coins=current_structures["coins"], potions=current_structures["potions"])
                 Rooms.DOORS.draw(WindowParams.SCREEN)
                 Rooms.DOORS_FLAG = True
             else:
-                current_enemies.update(player, walls_room, magic_balls, projectiles, current_structures["coins"])
-                current_enemies.draw(WindowParams.SCREEN)
-                projectiles.update(player, walls_room)
+                current_enemies.update(player, walls_room, magic_balls_hero, magic_ball_enemy, current_structures["coins"])
+                magic_ball_enemy.update(walls_room, player=player)
         else:
             Rooms.DOORS_FLAG = False
 
@@ -90,14 +89,17 @@ def main_game_loop() -> None:
         # update structures for each room
         if current_structures:
             current_structures["barrels"].draw(WindowParams.SCREEN)
-            current_structures["barrels"].update(magic_balls, projectiles, player, current_structures["coins"], current_structures["potions"])
             current_structures["coins"].draw(WindowParams.SCREEN)
             current_structures["coins"].update()
             current_structures["columns"].draw(WindowParams.SCREEN)
-            current_structures["columns"].update(magic_balls)
             current_structures["potions"].draw(WindowParams.SCREEN)
 
             player_group.update(player, barrels=current_structures["barrels"], moneys=current_structures["coins"], columns=current_structures["columns"], potions=current_structures["potions"])
+            magic_balls_hero.update(walls_room, barrels=current_structures["barrels"],
+                                    columns=current_structures["columns"], coins=current_structures["coins"],
+                                    potions=current_structures["potions"])
+        else:
+            magic_balls_hero.update(walls_room)
 
         # update portal and portal stand
         if current_portal:
@@ -112,11 +114,11 @@ def main_game_loop() -> None:
             player_group.update(player, walls=walls_room, tent=tent_structure)
 
         # update other objects
-        magic_balls.update(walls_room)
         bars.update()
-        magic_balls.draw(WindowParams.SCREEN)
-        projectiles.draw(WindowParams.SCREEN)
-        player_group.draw(WindowParams.SCREEN)
+        player_render_group.update(player)
+        player_render_group.draw(WindowParams.SCREEN)
+        magic_balls_hero.draw(WindowParams.SCREEN)
+        magic_ball_enemy.draw(WindowParams.SCREEN)
         walls_group(Rooms.ROOM).draw(WindowParams.SCREEN)
         bars.draw(WindowParams.SCREEN)
         text_score_money.draw_text(player.score, WindowParams.SCREEN)
