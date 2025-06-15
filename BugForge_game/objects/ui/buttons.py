@@ -1,5 +1,5 @@
 import pygame
-from structures_and_parameters.parameters_game import WindowParams, Color
+from structures_and_parameters.parameters_game import WindowParams, Color, Textures
 
 
 class Button(pygame.sprite.Sprite):
@@ -8,17 +8,20 @@ class Button(pygame.sprite.Sprite):
         self.text: str = text
         self.width: int = width if width else 400
         self.height: int = height if height else 100
-        self.image = pygame.Surface([self.width, self.height])
-        self.rect = self.image.get_rect()
         self.call = button_call
         self.hovered: bool = False
-        self.FONT = pygame.font.SysFont("arial", 50)
-        self.SMALL_FONT = pygame.font.SysFont("arial", 32)
+        self.FONT = Textures.FONT_MENU_AND_OPTIONS
+        self.image_normal = Textures.BUTTON_MENU_AND_OPTIONS_NORMAL
+        self.image_normal = pygame.transform.scale(self.image_normal, (self.width, self.height))
+        self.image_hover = Textures.BUTTON_MENU_AND_OPTIONS_HOVER
+        self.image_hover = pygame.transform.scale(self.image_hover, (self.width, self.height))
+        self.image = self.image_normal
+        self.rect = self.image.get_rect()
 
     def draw(self, surface) -> None:
-        color = Color.BLUE if self.hovered else Color.GRAY
-        pygame.draw.rect(surface, color, self.rect, border_radius=10)
-        text_surf = self.SMALL_FONT.render(self.text, True, Color.WHITE)
+        self.image = self.image_hover if self.hovered else self.image_normal
+        surface.blit(self.image, self.rect)
+        text_surf = self.FONT.render(self.text, True, Color.WHITE)
         text_rect = text_surf.get_rect(center=self.rect.center)
         surface.blit(text_surf, text_rect)
 
@@ -44,19 +47,15 @@ class ButtonAction(Button, pygame.sprite.Sprite):
     def __init__(self, text: str, y: int, button_call, x=None):
         pygame.sprite.Sprite.__init__(self)
         Button.__init__(self, text=text, y=y, button_call=button_call)
-        self.height: int = 60
-        self.width: int = 500
+        self.height: int = 100
+        self.width: int = 410
         self.x: int = x if x else WindowParams.WIDTH//2
         self.rect.center = (self.x, y)
-        self.FONT = pygame.font.SysFont("arial", 42)
-        self.SMALL_FONT = pygame.font.SysFont("arial", 24)
-
-    def draw(self, surface) -> None:
-        color = Color.DARKER_YELLOW if self.hovered else Color.GRAY
-        pygame.draw.rect(surface, color, self.rect, border_radius=10)
-        text_surf = self.SMALL_FONT.render(self.text, True, Color.WHITE)
-        text_rect = text_surf.get_rect(center=self.rect.center)
-        surface.blit(text_surf, text_rect)
+        self.image_normal = Textures.BUTTON_STORE_NORMAL
+        self.image_hover = Textures.BUTTON_STORE_HOVER
+        self.image_normal = pygame.transform.scale(self.image_normal, (self.width, self.height))
+        self.image_hover = pygame.transform.scale(self.image_hover, (self.width, self.height))
+        self.FONT = Textures.FONT_STORE
 
     def type_to_button(self, event) -> None:
         if event.type == pygame.MOUSEMOTION:
@@ -77,3 +76,4 @@ class ButtonBack(Button, pygame.sprite.Sprite):
             self.hovered = self.rect.collidepoint(event.pos)
         elif event.type == pygame.MOUSEBUTTONDOWN and self.hovered:
             self.flag_back = True
+

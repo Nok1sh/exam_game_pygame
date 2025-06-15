@@ -1,5 +1,4 @@
 import pygame
-import random
 from typing import Dict, List, Tuple
 from objects.world_objects.world_structures import Portal, PortalStand, Doors, Tent
 from objects.ui.text import TextOnWindowForOptions

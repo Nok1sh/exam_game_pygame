@@ -1,5 +1,6 @@
 import pygame
 from structures_and_parameters.parameters_game import WindowParams, ActionParams, Textures
+Textures.load_all()
 
 
 class Walls(pygame.sprite.Sprite):
@@ -19,7 +20,7 @@ class Doors(pygame.sprite.Sprite):
     def __init__(self, line: str, x=None, y=None):
         super().__init__()
         self.size_door: int = 2
-        self.image = pygame.image.load(f"textures/door_{line}.png")
+        self.image = Textures.DOORS[line]
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_door, self.image.get_height() // self.size_door))
         if line == 'vertical':
             self.rect = self.image.get_rect()
@@ -43,6 +44,22 @@ class Floor:
     @staticmethod
     def draw(screen):
         screen.blit(Floor.surface, (0, 0))
+
+
+class BackgroundOptions:
+    surface = None
+
+    @staticmethod
+    def init(screen_width, screen_height):
+        tile = pygame.image.load(f"textures/back.png").convert()
+        BackgroundOptions.surface = pygame.Surface((screen_width, screen_height))
+        for tx in range(0, screen_width, tile.get_width()):
+            for ty in range(0, screen_height, tile.get_height()):
+                BackgroundOptions.surface.blit(tile, (tx, ty))
+
+    @staticmethod
+    def draw(screen):
+        screen.blit(BackgroundOptions.surface, (0, 0))
 
 
 class Tent(pygame.sprite.Sprite):

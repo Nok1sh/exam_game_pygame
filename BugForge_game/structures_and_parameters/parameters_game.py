@@ -78,6 +78,8 @@ class Textures:
     def load_all(cls):
         if cls._loaded:
             return
+        cls.FONT_MENU_AND_OPTIONS = pygame.font.Font("fonts/WDXLLubrifontTC-Regular.ttf", 34)
+        cls.FONT_STORE = pygame.font.Font("fonts/WDXLLubrifontTC-Regular.ttf", 24)
         cls.BACKGROUND_MAIN_MENU_IMAGE = pygame.image.load("textures/main_menu_textures/background_main_menu.jpg").convert()
         cls.BACKGROUND_MAIN_MENU = pygame.transform.scale(
             cls.BACKGROUND_MAIN_MENU_IMAGE,
@@ -90,8 +92,13 @@ class Textures:
             (cls.TABLET_MAIN_MENU_IMAGE.get_width()//2,
              cls.TABLET_MAIN_MENU_IMAGE.get_height()//2)
         )
+        cls.DOORS = {direction: pygame.image.load(f"textures/doors/door_{direction}.png").convert_alpha() for direction in ["horizontal", "vertical"]}
         cls.FLOOR = pygame.image.load(f"textures/stone_floor.png").convert()
         cls.WALL = pygame.image.load("textures/wall.png").convert()
+        cls.BUTTON_MENU_AND_OPTIONS_NORMAL = pygame.image.load(f"textures/buttons/button_menu.png").convert_alpha()
+        cls.BUTTON_MENU_AND_OPTIONS_HOVER = pygame.image.load(f"textures/buttons/button_menu_hover.png").convert_alpha()
+        cls.BUTTON_STORE_NORMAL = pygame.image.load(f"textures/buttons/button_store.png").convert_alpha()
+        cls.BUTTON_STORE_HOVER = pygame.image.load(f"textures/buttons/button_store_hover.png").convert_alpha()
         cls.MAGIC_BALL_BIG = pygame.image.load("textures/magicballs/magicball_big.png").convert_alpha()
         cls.MAGIC_BALL_SMALL = pygame.image.load("textures/magicballs/magicball_small.png").convert_alpha()
         cls.MAGIC_BALL_BIG_ENEMY = pygame.image.load("textures/magicballs/magicball_enemy_big.png").convert_alpha()

@@ -50,7 +50,7 @@ portal_stand = pygame.sprite.Group(
 )
 
 
-text_score_money = TextOnWindowForGame(85, 15)
+text_score_money = TextOnWindowForGame(80, 10)
 
 
 def restart_game():
