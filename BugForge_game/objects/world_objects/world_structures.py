@@ -51,7 +51,7 @@ class BackgroundOptions:
 
     @staticmethod
     def init(screen_width, screen_height):
-        tile = pygame.image.load(f"textures/back.png").convert()
+        tile = pygame.image.load(f"textures/background_options.png").convert()
         BackgroundOptions.surface = pygame.Surface((screen_width, screen_height))
         for tx in range(0, screen_width, tile.get_width()):
             for ty in range(0, screen_height, tile.get_height()):
@@ -97,7 +97,7 @@ class PortalStand(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.size_portal: int = 3
-        self.image = pygame.image.load("textures/portal_stand.png")
+        self.image = pygame.image.load("textures/portals/portal_stand.png")
         self.image = pygame.transform.scale(self.image, (self.image.get_width() // self.size_portal, self.image.get_height() // self.size_portal))
         self.rect = self.image.get_rect()
         self.rect.center = (WindowParams.WIDTH // 2, WindowParams.HEIGHT // 3+100)
