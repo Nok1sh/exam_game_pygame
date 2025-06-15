@@ -108,7 +108,7 @@ class Textures:
         cls.HEALTH_BARS_BIG = [pygame.image.load(f"textures/healthbar2/healthbar_{number}.png").convert_alpha() for number in range(5)]
         cls.MONEY_BAR = pygame.image.load("textures/money_bar.png").convert_alpha()
         cls.PORTAL: list = [pygame.image.load(f"textures/portals/portal_{number}.png").convert_alpha() for number in range(1, 17)]
-        cls.PORTAL_STAND = pygame.image.load("textures/portal_stand.png").convert_alpha()
+        cls.PORTAL_STAND = pygame.image.load("textures/portals/portal_stand.png").convert_alpha()
         cls.COIN = [pygame.image.load(f"textures/coin/money_{number}.png").convert_alpha() for number in range(1, 7)]
         cls.COLUMN = [pygame.image.load(f"textures/columns/column_{number}.png").convert_alpha() for number in range(1, 7)]
         cls.MELEE_ENEMY = [pygame.image.load(f"textures/melee_enemy/melee_enemy_{number}.png").convert_alpha() for number in range(1, 6)]
