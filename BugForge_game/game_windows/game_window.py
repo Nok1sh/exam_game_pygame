@@ -2,8 +2,8 @@ import pygame
 import os
 import json
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
-from structures_and_parameters.groups_of_enemies_model import GetEnemiesStructure
-from structures_and_parameters.parameters_game import WindowParams, ActionParams
+from structures_and_parameters.groups_of_enemies_model import GetEnemiesStructure, RangeBossEnemy
+from structures_and_parameters.parameters_game import WindowParams, ActionParams, Music
 from objects.groups_objects import (player_group, walls_group, add_magic_ball, magic_balls_hero, bars, magic_ball_enemy,
                                     portal, portal_stand, player, restart_game,
                                     text_score_money, HealthBar, player_render_group)
@@ -23,6 +23,7 @@ def main_game_loop() -> None:
     Rooms.fade_swap_level()
     Floor.draw(WindowParams.SCREEN)
     current_room = -1
+    Music.swap_music(Music.BASE_BACKGROUND)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -34,10 +35,13 @@ def main_game_loop() -> None:
                         player.mana_pool -= 1
                         ActionParams.LAST_MAGIC_BALLS = pygame.time.get_ticks()
                 elif event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
                     options_in_game()
+                    pygame.mixer.music.unpause()
 
         # check gameplay
         if not player.is_life or WindowParams.FLAG_RETURN_TO_MAIN_MENU:
+            pygame.mixer.music.stop()
             WindowParams.FLAG_RETURN_TO_MAIN_MENU = False
             return
 
@@ -69,8 +73,16 @@ def main_game_loop() -> None:
             tent_structure = Rooms.TENT.get(Rooms.ROOM)
         Floor.draw(WindowParams.SCREEN)
 
+        if not Music.FLAG_RUN_MUSIC:
+            Music.swap_music(Music.BASE_BACKGROUND)
+            Music.FLAG_RUN_MUSIC = True
+
         # update enemies for each room
         if current_enemies:
+            if isinstance(list(current_enemies)[0], RangeBossEnemy) and Music.FLAG_SWAP_MUSIC:
+                Music.swap_music(Music.BOSS_BATTLE)
+                Music.FLAG_SWAP_MUSIC = False
+
             if current_structures:
                 current_enemies.update(player, walls_room, magic_balls_hero, magic_ball_enemy, current_structures["coins"], current_structures["barrels"], current_structures["columns"])
                 magic_ball_enemy.update(walls_room, current_enemies, current_structures["barrels"], current_structures["columns"], player=player, coins=current_structures["coins"], potions=current_structures["potions"])
@@ -80,6 +92,9 @@ def main_game_loop() -> None:
                 current_enemies.update(player, walls_room, magic_balls_hero, magic_ball_enemy, current_structures["coins"])
                 magic_ball_enemy.update(walls_room, player=player)
         else:
+            if Music.FLAG_SWAP_MUSIC:
+                Music.swap_music(Music.BASE_BACKGROUND)
+                Music.FLAG_SWAP_MUSIC = False
             Rooms.DOORS_FLAG = False
 
         # update shop on each level

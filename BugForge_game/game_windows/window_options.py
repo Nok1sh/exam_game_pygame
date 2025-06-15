@@ -1,9 +1,10 @@
 import pygame
-from structures_and_parameters.parameters_game import WindowParams, Color, ActionParams
+from structures_and_parameters.parameters_game import WindowParams, Color, ActionParams, Music
 from objects.ui.bars import HealthBar
 from objects.ui.text import TextOnWindowForOptions
 from objects.ui.store import StoreMenu, Trader
 from objects.ui.buttons import ButtonMenu, ButtonBack, ButtonAction
+from objects.ui.volumeslider import VolumeSlider
 from objects.world_objects.world_structures import BackgroundOptions
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
 
@@ -11,7 +12,6 @@ options_screen = pygame.display.set_mode(
     (WindowParams.WIDTH, WindowParams.HEIGHT),
 )
 BackgroundOptions.init(WindowParams.WIDTH, WindowParams.HEIGHT)
-
 
 def fullscreen() -> None:
     WindowParams.update_screen(size_fullscreen=True)
@@ -21,14 +21,26 @@ def window_screen() -> None:
     WindowParams.update_screen()
 
 
-def change_health_bar_big():
+def change_health_bar_big() -> None:
     ActionParams.FLAG_UPPER_HEALTH_BAR = True
     HealthBar.FLAG_SWAP = True
 
 
-def change_health_bar_small():
+def change_health_bar_small() -> None:
     ActionParams.FLAG_UPPER_HEALTH_BAR = False
     HealthBar.FLAG_SWAP = True
+
+
+def run_music() -> None:
+    Music.FLAG_RUN_MUSIC = False
+    Music.FLAG_SWAP_MUSIC = True
+
+
+def stop_music() -> None:
+    if not pygame.mixer.music.get_busy():
+        pygame.mixer.music.stop()
+    Music.FLAG_RUN_MUSIC = True
+    Music.FLAG_SWAP_MUSIC = False
 
 
 def options_main_menu() -> None:
@@ -36,7 +48,9 @@ def options_main_menu() -> None:
         ButtonMenu('Полный экран', WindowParams.HEIGHT // 2 - 200, x=WindowParams.WIDTH//2 - 180, button_call=fullscreen, width=300, height=75),
         ButtonMenu(f'Оконный режим', WindowParams.HEIGHT // 2 - 200, x=WindowParams.WIDTH//2 + 180, button_call=window_screen, width=300, height=75),
         ButtonMenu(f'Увеличенное здоровье', WindowParams.HEIGHT // 2, x=WindowParams.WIDTH//2 - 180, button_call=change_health_bar_big, width=300, height=75),
-        ButtonMenu(f'Уменьшенное здоровье', WindowParams.HEIGHT // 2, x=WindowParams.WIDTH//2 + 180, button_call=change_health_bar_small, width=300, height=75)
+        ButtonMenu(f'Уменьшенное здоровье', WindowParams.HEIGHT // 2, x=WindowParams.WIDTH//2 + 180, button_call=change_health_bar_small, width=300, height=75),
+    ButtonMenu(f'Включить музыку', WindowParams.HEIGHT // 2 + 100, x=WindowParams.WIDTH // 2 - 180, button_call=run_music, width=300, height=75),
+    ButtonMenu(f'Выключить музыку', WindowParams.HEIGHT // 2 + 100, x=WindowParams.WIDTH // 2 + 180, button_call=stop_music, width=300, height=75)
     )
     button_back_group = pygame.sprite.Group(
         ButtonBack('Назад', WindowParams.HEIGHT // 2 + 325, 200)
@@ -45,17 +59,23 @@ def options_main_menu() -> None:
         TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 300, 'Расширение', Color.WHITE),
         TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 100, 'Игровые параметры ', Color.WHITE)
     )
+    volume_slider = VolumeSlider()
     while True:
         BackgroundOptions.draw(options_screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
+
+            volume_slider.handle_event(event)
+
             for btn in buttons_options_group:
                 btn.type_to_button(event)
             for back in button_back_group:
                 back.type_to_button(event)
                 if back.flag_back:
                     return
+
+        volume_slider.draw(options_screen)
 
         for btn in text_options_group:
             btn.draw_text(options_screen)
@@ -81,14 +101,55 @@ def return_to_main_menu() -> None:
     WindowParams.FLAG_RETURN_TO_MAIN_MENU = True
 
 
+def parameters_in_game() -> None:
+    buttons_options_group = pygame.sprite.Group(
+        ButtonMenu(f'Включить музыку', WindowParams.HEIGHT // 2 - 100, x=WindowParams.WIDTH // 2 - 180,
+                   button_call=run_music, width=300, height=75),
+        ButtonMenu(f'Выключить музыку', WindowParams.HEIGHT // 2 - 100, x=WindowParams.WIDTH // 2 + 180,
+                   button_call=stop_music, width=300, height=75)
+    )
+    button_back_group = pygame.sprite.Group(
+        ButtonBack('Назад', WindowParams.HEIGHT // 2 + 325, 200)
+    )
+    text_options_group = pygame.sprite.Group(
+        TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 200, 'Игровые параметры ', Color.WHITE)
+    )
+    volume_slider = VolumeSlider(y=WindowParams.HEIGHT//2+100)
+    while True:
+        BackgroundOptions.draw(options_screen)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+
+            volume_slider.handle_event(event)
+
+            for btn in buttons_options_group:
+                btn.type_to_button(event)
+            for back in button_back_group:
+                back.type_to_button(event)
+                if back.flag_back:
+                    return
+
+        volume_slider.draw(options_screen)
+
+        for btn in text_options_group:
+            btn.draw_text(options_screen)
+        for btn in buttons_options_group:
+            btn.draw(options_screen)
+        for btn in button_back_group:
+            btn.draw(options_screen)
+        pygame.display.flip()
+
+
 def options_in_game() -> None:
     global continue_game, back_to_main_menu
     continue_game = False
     back_to_main_menu = False
     buttons_options_group = pygame.sprite.Group(
-        ButtonMenu('Продолжить', WindowParams.HEIGHT // 2 - 150, continue_game_button),
-        ButtonMenu('Вернуться в главное меню', WindowParams.HEIGHT // 2, return_to_main_menu),
-        ButtonMenu(f'Выйти из игры', WindowParams.HEIGHT // 2 + 150, pygame.quit)
+        ButtonMenu('Продолжить', WindowParams.HEIGHT // 2 - 200, continue_game_button),
+        ButtonMenu('Вернуться в главное меню', WindowParams.HEIGHT // 2 - 50, return_to_main_menu),
+        ButtonMenu('Параметры', WindowParams.HEIGHT // 2 + 100, parameters_in_game),
+        ButtonMenu(f'Выйти из игры', WindowParams.HEIGHT // 2 + 250, pygame.quit)
     )
     text_options_group = pygame.sprite.Group(
         TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 300, 'Настройки', Color.WHITE)
@@ -111,7 +172,7 @@ def options_in_game() -> None:
         pygame.display.flip()
 
 
-def information_menu():
+def information_menu() -> None:
     button_back_group = pygame.sprite.Group(
         ButtonBack('Назад', WindowParams.HEIGHT // 2 + 325, 200)
     )
@@ -150,6 +211,7 @@ def information_menu():
         for btn in button_back_group:
             btn.draw(options_screen)
         pygame.display.flip()
+
 
 def store_menu(player) -> None:
     def update_score_image():
