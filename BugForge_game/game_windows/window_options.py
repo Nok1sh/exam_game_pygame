@@ -4,11 +4,13 @@ from objects.ui.bars import HealthBar
 from objects.ui.text import TextOnWindowForOptions
 from objects.ui.store import StoreMenu, Trader
 from objects.ui.buttons import ButtonMenu, ButtonBack, ButtonAction
+from objects.world_objects.world_structures import BackgroundOptions
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
 
 options_screen = pygame.display.set_mode(
     (WindowParams.WIDTH, WindowParams.HEIGHT),
 )
+BackgroundOptions.init(WindowParams.WIDTH, WindowParams.HEIGHT)
 
 
 def fullscreen() -> None:
@@ -44,7 +46,7 @@ def options_main_menu() -> None:
         TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 100, 'Игровые параметры ', Color.WHITE)
     )
     while True:
-        options_screen.fill(Color.BLACK)
+        BackgroundOptions.draw(options_screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
@@ -92,7 +94,7 @@ def options_in_game() -> None:
         TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 300, 'Настройки', Color.WHITE)
     )
     while True:
-        options_screen.fill(Color.BLACK)
+        BackgroundOptions.draw(options_screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
@@ -108,6 +110,42 @@ def options_in_game() -> None:
             btn.draw(options_screen)
         pygame.display.flip()
 
+
+def information_menu():
+    button_back_group = pygame.sprite.Group(
+        ButtonBack('Назад', WindowParams.HEIGHT // 2 + 325, 200)
+    )
+    text_information_group = pygame.sprite.Group(
+        TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 320, 'Информация про игру', Color.WHITE),
+        TextOnWindowForOptions(120, WindowParams.HEIGHT // 2 - 260, '1. Управление:', Color.WHITE, 32),
+        TextOnWindowForOptions(150, WindowParams.HEIGHT // 2 - 210, 'W - идти вперёд', Color.WHITE, 32),
+        TextOnWindowForOptions(140, WindowParams.HEIGHT // 2 - 160, 'S - идти назад', Color.WHITE, 32),
+        TextOnWindowForOptions(140, WindowParams.HEIGHT // 2 - 110, 'A - идти влево', Color.WHITE, 32),
+        TextOnWindowForOptions(150, WindowParams.HEIGHT // 2 - 60, 'D - идти вправо', Color.WHITE, 32),
+        TextOnWindowForOptions(190, WindowParams.HEIGHT // 2 + 20, 'Зажимая две кнопки, \nидти по диагонали', Color.WHITE, 32),
+        TextOnWindowForOptions(220, WindowParams.HEIGHT // 2 + 120, 'SPACE - стрелять \nв направлении движения', Color.WHITE, 32),
+        TextOnWindowForOptions(180, WindowParams.HEIGHT // 2 + 220, 'E - взаимодействие \nсо структурами', Color.WHITE, 32),
+        TextOnWindowForOptions(WindowParams.WIDTH//2, WindowParams.HEIGHT // 2 - 260, '2. Важные моменты:', Color.WHITE, 32),
+        TextOnWindowForOptions(WindowParams.WIDTH // 2 + 175, WindowParams.HEIGHT // 2 - 200, '1) Для перехода между уровнями используется портал\nдля его активации нужно убить всех противников на уровне', Color.WHITE, 24),
+        TextOnWindowForOptions(WindowParams.WIDTH // 2 + 215, WindowParams.HEIGHT // 2 - 140,'2) При переходе на новый уровень, противники становятся сильнее',Color.WHITE, 24),
+        TextOnWindowForOptions(WindowParams.WIDTH // 2 + 200, WindowParams.HEIGHT // 2 - 100,'3) При переходе на новый уровень, цены у торговца возрастают', Color.WHITE, 24),
+        TextOnWindowForOptions(WindowParams.WIDTH // 2 + 155, WindowParams.HEIGHT // 2 - 60, '4) При переходе на новый уровень, сохраняется прогресс', Color.WHITE, 24),
+    )
+    while True:
+        BackgroundOptions.draw(options_screen)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+            for back in button_back_group:
+                back.type_to_button(event)
+                if back.flag_back:
+                    return
+
+        for btn in text_information_group:
+            btn.draw_text(options_screen)
+        for btn in button_back_group:
+            btn.draw(options_screen)
+        pygame.display.flip()
 
 def store_menu(player) -> None:
     def update_score_image():
@@ -143,8 +181,9 @@ def store_menu(player) -> None:
     )
     text_options_group = pygame.sprite.Group(
         TextOnWindowForOptions(WindowParams.WIDTH // 2, WindowParams.HEIGHT // 2 - 300, 'CURIOSITY SHOP', Color.WHITE),
-        TextOnWindowForOptions(WindowParams.WIDTH//2+250, WindowParams.HEIGHT // 2 - 200, f'Приветствую тебя, путник, не желаешь прикупить', Color.WHITE, 28),
-        TextOnWindowForOptions(WindowParams.WIDTH//2+180, WindowParams.HEIGHT // 2 - 170, f'чего-нибудь из моих товаров?', Color.WHITE, 28),
+        TextOnWindowForOptions(WindowParams.WIDTH//2+250, WindowParams.HEIGHT // 2 - 230, f'Приветствую тебя, путник,', Color.WHITE, 28),
+        TextOnWindowForOptions(WindowParams.WIDTH//2+180, WindowParams.HEIGHT // 2 - 200, f'не желаешь прикупить', Color.WHITE, 28),
+        TextOnWindowForOptions(WindowParams.WIDTH // 2 + 230, WindowParams.HEIGHT // 2 - 170, f'чего-нибудь из моих товаров?', Color.WHITE, 28),
         TextOnWindowForOptions(200, WindowParams.HEIGHT // 2 - 300, f'Твои монеты: {player.score}', Color.WHITE, 28)
     )
     buttons_attributes = pygame.sprite.Group(
