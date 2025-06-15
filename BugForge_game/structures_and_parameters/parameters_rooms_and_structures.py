@@ -34,7 +34,6 @@ class Structures:
 
     @staticmethod
     def get_portal_on_level(number_level: int) -> Dict[int, pygame.sprite.Group]:
-        print(number_level)
         if number_level == 1:
             structures_by_room = {4: pygame.sprite.Group(
                 PortalStand(), Portal()

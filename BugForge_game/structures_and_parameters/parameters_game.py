@@ -53,6 +53,23 @@ class ActionParams:
     FLAG_UPPER_HEALTH_BAR: bool = True
 
 
+class Music:
+    FLAG_SWAP_MUSIC: bool = True
+    FLAG_RUN_MUSIC: bool = True
+    BOSS_BATTLE: str = "music/boss_battle.mp3"
+    BASE_BACKGROUND: str = "music/base_background2_music.mp3"
+    CURRENT_MUSIC: str = BASE_BACKGROUND
+    pygame.mixer.music.set_volume(0.2)
+
+    @staticmethod
+    def swap_music(trek):
+        Music.CURRENT_MUSIC = trek
+        if Music.FLAG_SWAP_MUSIC:
+            pygame.mixer.fadeout(500)
+            pygame.mixer.music.load(Music.CURRENT_MUSIC)
+            pygame.mixer.music.play(loops=-1)
+
+
 class Color:
     WHITE: Tuple[int, int, int] = (255, 255, 255)
     RED: Tuple[int, int, int] = (255, 0, 0)
@@ -70,7 +87,7 @@ class Color:
 
 
 class Textures:
-    _loaded = False
+    _loaded: bool = False
     hero_size_width: int = 9
     hero_size_height: int = 8
 
