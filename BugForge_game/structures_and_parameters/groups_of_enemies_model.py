@@ -57,7 +57,7 @@ class EnemiesStructure(pygame.sprite.Sprite):
                 ),
                 11: pygame.sprite.Group(
                     MeleeEnemy(WindowParams.WIDTH - 200, 120),
-                    MeleeEnemy(WindowParams.WIDTH - 120, WindowParams.HEIGHT - 120)
+                    MeleeEnemy(WindowParams.WIDTH - 140, WindowParams.HEIGHT - 140)
                 ),
                 5: pygame.sprite.Group(
                     MeleeEnemy(WindowParams.WIDTH //2,  WindowParams.HEIGHT//2)
