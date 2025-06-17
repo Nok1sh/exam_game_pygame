@@ -79,9 +79,9 @@ def main_game_loop() -> None:
 
         # update enemies for each room
         if current_enemies:
-            if isinstance(list(current_enemies)[0], RangeBossEnemy) and Music.FLAG_SWAP_MUSIC:
+            if isinstance(list(current_enemies)[0], RangeBossEnemy) and not Music.FLAG_SWAP_MUSIC:
+                Music.FLAG_SWAP_MUSIC = True
                 Music.swap_music(Music.BOSS_BATTLE)
-                Music.FLAG_SWAP_MUSIC = False
 
             if current_structures:
                 current_enemies.update(player, walls_room, magic_balls_hero, magic_ball_enemy, current_structures["coins"], current_structures["barrels"], current_structures["columns"])

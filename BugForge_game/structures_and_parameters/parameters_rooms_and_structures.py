@@ -98,7 +98,7 @@ class Rooms:
         (0, 1, 1, 0)
     ]
     COUNT_ROOMS: int = len(rooms)
-    NUMBER_LEVEL: int = 1
+    NUMBER_LEVEL: int = 4
     LEVEL_ROOMS: Dict[tuple, int] = Structures.get_level(NUMBER_LEVEL)
     LEVEL_STRUCTURE: Dict[int, dict] = Structures.get_structures_on_level(NUMBER_LEVEL)
     PORTAL_AND_STAND: Dict[int, pygame.sprite.Group] = Structures.get_portal_on_level(NUMBER_LEVEL)
@@ -153,7 +153,7 @@ class Rooms:
     @staticmethod
     def restart_parameters() -> None:
         Rooms.DOORS_FLAG = False
-        Rooms.NUMBER_LEVEL = Rooms.NUMBER_LEVEL if Rooms.FLAG_LOAD_SAVE else 1
+        Rooms.NUMBER_LEVEL = Rooms.NUMBER_LEVEL if Rooms.FLAG_LOAD_SAVE else 4
         Rooms.CURRENT_ROOM = (0, 0)
         Rooms.LEVEL_ROOMS = Structures.get_level(Rooms.NUMBER_LEVEL)
         Rooms.LEVEL_STRUCTURE = Structures.get_structures_on_level(Rooms.NUMBER_LEVEL)

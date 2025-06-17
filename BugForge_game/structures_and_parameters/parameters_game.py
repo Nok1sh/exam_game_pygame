@@ -63,8 +63,8 @@ class Music:
 
     @staticmethod
     def swap_music(trek):
-        Music.CURRENT_MUSIC = trek
         if Music.FLAG_SWAP_MUSIC:
+            Music.CURRENT_MUSIC = trek
             pygame.mixer.fadeout(500)
             pygame.mixer.music.load(Music.CURRENT_MUSIC)
             pygame.mixer.music.play(loops=-1)

@@ -13,6 +13,7 @@ options_screen = pygame.display.set_mode(
 )
 BackgroundOptions.init(WindowParams.WIDTH, WindowParams.HEIGHT)
 
+
 def fullscreen() -> None:
     WindowParams.update_screen(size_fullscreen=True)
 
@@ -37,8 +38,7 @@ def run_music() -> None:
 
 
 def stop_music() -> None:
-    if not pygame.mixer.music.get_busy():
-        pygame.mixer.music.stop()
+    pygame.mixer.music.stop()
     Music.FLAG_RUN_MUSIC = True
     Music.FLAG_SWAP_MUSIC = False
 
