@@ -23,8 +23,6 @@ class WallOfRooms:
 
 def room_number(number: int) -> pygame.sprite.Group:
     group_of_walls = pygame.sprite.Group()
-    move_horizontal: int = 5
-    move_vertical: int = 5
     if number == 0:  # room with 2 doors on vertical walls
         group_of_walls.add(
             WallOfRooms.TOP_WALL,
