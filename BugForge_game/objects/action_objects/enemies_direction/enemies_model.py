@@ -88,6 +88,7 @@ class Enemy(pygame.sprite.Sprite):
         balls_collision = pygame.sprite.spritecollide(self, magic_balls, True)
         if balls_collision:
             self.current_health -= player.damage
+            print(self.current_health)
             if self.current_health <= 0:
                 self.kill()
                 if random.random() <= 0.2:
