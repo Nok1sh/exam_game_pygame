@@ -115,6 +115,12 @@ class Rooms:
     COST_UPDATE_RECOVERED_MANA: int = 200
     COST_RECOVERY_HEALTH: int = 200
 
+    WALLS_ROOM = None
+    CURRENT_ENEMIES = None
+    CURRENT_PORTAL = None
+    CURRENT_STRUCTURES = None
+    TENT_STRUCTURE = None
+
     @staticmethod
     def fade_swap_level():
         surface = pygame.Surface(WindowParams.SCREEN.get_size())
@@ -157,10 +163,17 @@ class Rooms:
         Rooms.CURRENT_ROOM = (0, 0)
         Rooms.LEVEL_ROOMS = Structures.get_level(Rooms.NUMBER_LEVEL)
         Rooms.LEVEL_STRUCTURE = Structures.get_structures_on_level(Rooms.NUMBER_LEVEL)
+        Rooms.PORTAL_AND_STAND = Structures.get_portal_on_level(Rooms.NUMBER_LEVEL)
         Rooms.TENT = Structures.get_tent(Rooms.NUMBER_LEVEL)
         Rooms.ROOM = Rooms.LEVEL_ROOMS[(0, 0)]
         Rooms.COST_UPDATE_DAMAGE = 200
         Rooms.COST_UPDATE_SPEED = 150
         Rooms.COST_UPDATE_RECOVERED_MANA = 200
         ActionParams.RECOVERY_MANA_BAR = 3000
+
+        Rooms.WALLS_ROOM = None
+        Rooms.CURRENT_ENEMIES = None
+        Rooms.CURRENT_PORTAL = None
+        Rooms.CURRENT_STRUCTURES = None
+        Rooms.TENT_STRUCTURE = None
 

@@ -2,7 +2,7 @@ import pygame
 import time
 from structures_and_parameters.parameters_game import WindowParams, ActionParams
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
-from game_windows.window_options import store_menu
+from windows.options_windows.store_window import store_menu
 
 
 class Player(pygame.sprite.Sprite):
@@ -40,6 +40,7 @@ class Player(pygame.sprite.Sprite):
         self.health_potion: int = 1
         self.mana_potion: int = 3
         self.flag_swap_image: bool = False
+        self.time_use_portal: int = 0
 
     def restart_parameters(self) -> None:
         """
@@ -182,6 +183,8 @@ class Player(pygame.sprite.Sprite):
 
     def __update_portal(self, portal) -> None:
         interaction_player = pygame.key.get_pressed()
+        time_now = pygame.time.get_ticks()
+
         collision_x = pygame.sprite.spritecollide(self, portal, False)
         for obj in collision_x:
             if self.speed_x > 0:
@@ -190,9 +193,13 @@ class Player(pygame.sprite.Sprite):
                 self.rect.left = obj.rect.right
             self.speed_x = 0
             if interaction_player[self.interaction_with_objects]:
+                self.time_use_portal = time_now
                 Rooms.update_level()
                 self.rect.x = WindowParams.WIDTH // 2
                 self.rect.y = WindowParams.HEIGHT // 2
+
+        if time_now - self.time_use_portal < 5000:
+            return
 
         collision_y = pygame.sprite.spritecollide(self, portal, False)
         for obj in collision_y:
@@ -202,6 +209,7 @@ class Player(pygame.sprite.Sprite):
                 self.rect.top = obj.rect.bottom
             self.speed_y = 0
             if interaction_player[self.interaction_with_objects]:
+                self.time_use_portal = time_now
                 Rooms.update_level()
                 self.rect.x = WindowParams.WIDTH // 2
                 self.rect.y = WindowParams.HEIGHT // 2

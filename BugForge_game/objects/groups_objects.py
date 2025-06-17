@@ -7,6 +7,8 @@ from objects.world_objects.world_structures import Portal, PortalStand
 from .ui.bars import MoneyBar, ManaBar, HealthBar
 from .ui.text import TextOnWindowForGame
 from structures_and_parameters.rooms import room_number
+from structures_and_parameters.parameters_rooms_and_structures import Rooms
+from structures_and_parameters.parameters_game import Music
 
 buttons_main_menu_group = pygame.sprite.Group()
 
@@ -58,3 +60,7 @@ def restart_game():
     GetEnemiesStructure.restart_game()
     magic_balls_hero.empty()
     magic_ball_enemy.empty()
+    Rooms.fade_swap_level()
+    Rooms.FLAG_LOAD_SAVE = False
+    Music.FLAG_SWAP_MUSIC = True
+    Music.swap_music(Music.BASE_BACKGROUND)

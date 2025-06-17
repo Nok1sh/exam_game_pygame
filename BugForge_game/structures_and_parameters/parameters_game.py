@@ -17,6 +17,9 @@ class WindowParams:
         (WIDTH, HEIGHT),
         pygame.SHOWN
     )
+    OPTION_SCREEN = pygame.display.set_mode(
+        (WIDTH, HEIGHT),
+    )
     icon_game = pygame.image.load("textures/hero/hero.png")
     pygame.display.set_icon(icon_game)
     pygame.display.set_caption("Bugforge")
@@ -63,11 +66,22 @@ class Music:
 
     @staticmethod
     def swap_music(trek):
-        if Music.FLAG_SWAP_MUSIC:
+        if Music.FLAG_SWAP_MUSIC and Music.FLAG_RUN_MUSIC:
             Music.CURRENT_MUSIC = trek
             pygame.mixer.fadeout(500)
             pygame.mixer.music.load(Music.CURRENT_MUSIC)
             pygame.mixer.music.play(loops=-1)
+
+    @staticmethod
+    def run_music() -> None:
+        Music.FLAG_RUN_MUSIC = True
+        Music.FLAG_SWAP_MUSIC = True
+
+    @staticmethod
+    def stop_music() -> None:
+        pygame.mixer.music.stop()
+        Music.FLAG_RUN_MUSIC = False
+        Music.FLAG_SWAP_MUSIC = False
 
 
 class Color:
