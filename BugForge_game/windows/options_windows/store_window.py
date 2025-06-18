@@ -70,11 +70,11 @@ def store_menu(player) -> None:
 
         trader.draw(WindowParams.SCREEN)
         for btn in text_options_group:
-            btn.draw_text(options_screen)
+            btn.draw_text(WindowParams.OPTION_SCREEN)
         for btn in button_back_group:
-            btn.draw(options_screen)
+            btn.draw(WindowParams.OPTION_SCREEN)
         for button in buttons_attributes:
-            button.draw(options_screen)
+            button.draw(WindowParams.OPTION_SCREEN)
 
         pygame.display.flip()
         ActionParams.CLOCK.tick(ActionParams.FPS)
