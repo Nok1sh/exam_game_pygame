@@ -2,8 +2,9 @@ import pygame
 import os
 import json
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
-from structures_and_parameters.groups_of_enemies_model import GetEnemiesStructure
+from structures_and_parameters.environment.groups_of_enemies_model import GetEnemiesStructure
 from structures_and_parameters.parameters_game import ActionParams
+from structures_and_parameters.get_structures_and_enemies_on_level import get_objects
 from objects.groups_objects import player_group, walls_group, add_magic_ball, magic_balls_hero, magic_ball_enemy, player
 
 
@@ -35,9 +36,9 @@ def update_game_state(current_room) -> int:
 
     if current_room != Rooms.ROOM:
         Rooms.WALLS_ROOM = walls_group(Rooms.ROOM)
-        Rooms.CURRENT_ENEMIES = GetEnemiesStructure.ENEMIES.get(Rooms.ROOM)
+        Rooms.CURRENT_ENEMIES = get_objects(GetEnemiesStructure.ENEMIES, Rooms.ROOM)
         Rooms.CURRENT_PORTAL = Rooms.PORTAL_AND_STAND.get(Rooms.ROOM)
-        Rooms.CURRENT_STRUCTURES = Rooms.LEVEL_STRUCTURE.get(Rooms.ROOM)
+        Rooms.CURRENT_STRUCTURES = get_objects(Rooms.LEVEL_STRUCTURE, Rooms.ROOM, "structures")
         Rooms.TENT_STRUCTURE = Rooms.TENT.get(Rooms.ROOM)
     return Rooms.ROOM
 

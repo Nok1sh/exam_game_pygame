@@ -1,5 +1,5 @@
 from structures_and_parameters.parameters_game import Music
-from structures_and_parameters.groups_of_enemies_model import RangeBossEnemy
+from structures_and_parameters.environment.groups_of_enemies_model import RangeBossEnemy
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
 
 

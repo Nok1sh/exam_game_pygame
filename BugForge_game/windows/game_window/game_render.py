@@ -2,7 +2,7 @@ from structures_and_parameters.parameters_rooms_and_structures import Rooms
 from objects.groups_objects import (player_render_group, magic_balls_hero, magic_ball_enemy,
                                     bars, text_score_money, walls_group, portal_stand)
 from structures_and_parameters.parameters_game import WindowParams
-from structures_and_parameters.groups_of_enemies_model import GetEnemiesStructure
+from structures_and_parameters.environment.groups_of_enemies_model import GetEnemiesStructure
 from objects.world_objects.world_structures import Floor
 from objects.groups_objects import player, portal
 
