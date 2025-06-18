@@ -3,7 +3,7 @@ from typing import Dict, List, Tuple
 from objects.world_objects.world_structures import Portal, PortalStand, Doors, Tent
 from objects.ui.text import TextOnWindowForOptions
 from structures_and_parameters.parameters_game import WindowParams, ActionParams, Color
-from structures_and_parameters.structures import get_structures
+from structures_and_parameters.environment.structures import get_structures
 
 
 class Structures:

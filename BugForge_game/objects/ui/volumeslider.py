@@ -9,7 +9,7 @@ class VolumeSlider:
         self.width: int = 600
         self.height: int = 20
         self.bar_rect = pygame.Rect(self.x-self.width//2, self.y, self.width, self.height)
-        self.handle_rect = pygame.Rect(self.x, self.y - 5, 10, 30)
+        self.handle_rect = pygame.Rect(self.x-self.width//2 + int(self.width * pygame.mixer.music.get_volume()), self.y - 5, 10, 30)
         self.dragging = False
 
     def handle_event(self, event):
