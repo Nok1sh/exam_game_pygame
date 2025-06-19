@@ -109,9 +109,9 @@ class Rooms:
     GENERATED_ROOM: List[int] = [0]
     FLAG_SWAP_LEVEL: bool = False
     FLAG_LOAD_SAVE: bool = False
-    COST_UPDATE_DAMAGE: int = 200
-    COST_UPDATE_SPEED: int = 150
-    COST_UPDATE_RECOVERED_MANA: int = 200
+    COST_UPDATE_DAMAGE: int = 200 + 50 * (NUMBER_LEVEL - 1)
+    COST_UPDATE_SPEED: int = 150 + 50 * (NUMBER_LEVEL - 1)
+    COST_UPDATE_RECOVERED_MANA: int = 200 + 50 * (NUMBER_LEVEL - 1)
     COST_RECOVERY_HEALTH: int = 200
 
     WALLS_ROOM = None
@@ -165,9 +165,9 @@ class Rooms:
         Rooms.PORTAL_AND_STAND = Structures.get_portal_on_level(Rooms.NUMBER_LEVEL)
         Rooms.TENT = Structures.get_tent(Rooms.NUMBER_LEVEL)
         Rooms.ROOM = Rooms.LEVEL_ROOMS[(0, 0)]
-        Rooms.COST_UPDATE_DAMAGE = 200
-        Rooms.COST_UPDATE_SPEED = 150
-        Rooms.COST_UPDATE_RECOVERED_MANA = 200
+        Rooms.COST_UPDATE_DAMAGE = 200 + 50 * (Rooms.NUMBER_LEVEL - 1)
+        Rooms.COST_UPDATE_SPEED = 150 + 50 * (Rooms.NUMBER_LEVEL - 1)
+        Rooms.COST_UPDATE_RECOVERED_MANA = 200 + 50 * (Rooms.NUMBER_LEVEL - 1)
         ActionParams.RECOVERY_MANA_BAR = 3000
 
         Rooms.WALLS_ROOM = None
