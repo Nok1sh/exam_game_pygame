@@ -4,7 +4,7 @@ from objects.ui.bars import HealthBar
 from objects.ui.text import TextOnWindowForOptions
 from objects.ui.buttons import ButtonMenu, ButtonBack
 from objects.ui.volumeslider import VolumeSlider
-from objects.world_objects.world_structures import BackgroundOptions
+from objects.world_objects.background_options import BackgroundOptions
 
 
 BackgroundOptions.init(WindowParams.WIDTH, WindowParams.HEIGHT)
@@ -29,6 +29,9 @@ def change_health_bar_small() -> None:
 
 
 def options_main_menu() -> None:
+    """
+    The options window in the main menu
+    """
     buttons_options_group = pygame.sprite.Group(
         ButtonMenu('Полный экран', WindowParams.HEIGHT // 2 - 200, x=WindowParams.WIDTH//2 - 180, button_call=fullscreen, width=300, height=75),
             ButtonMenu(f'Оконный режим', WindowParams.HEIGHT // 2 - 200, x=WindowParams.WIDTH//2 + 180, button_call=window_screen, width=300, height=75),

@@ -3,11 +3,14 @@ from structures_and_parameters.parameters_game import WindowParams, Color, Actio
 from objects.ui.text import TextOnWindowForOptions
 from objects.ui.store import StoreMenu, Trader
 from objects.ui.buttons import ButtonBack, ButtonAction
-from objects.world_objects.world_structures import BackgroundOptions
+from objects.world_objects.background_options import BackgroundOptions
 from structures_and_parameters.parameters_rooms_and_structures import Rooms
 
 
 def store_menu(player) -> None:
+    """
+    Game store window
+    """
     def update_score_image():
         list(text_options_group)[-1].kill()
         text_options_group.add(TextOnWindowForOptions(200, WindowParams.HEIGHT // 2 - 300, f'Твои монеты: {player.score}', Color.WHITE, 28))

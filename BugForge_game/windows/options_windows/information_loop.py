@@ -2,10 +2,13 @@ import pygame
 from structures_and_parameters.parameters_game import WindowParams, Color
 from objects.ui.text import TextOnWindowForOptions
 from objects.ui.buttons import ButtonBack
-from objects.world_objects.world_structures import BackgroundOptions
+from objects.world_objects.background_options import BackgroundOptions
 
 
 def information_menu() -> None:
+    """
+    Window with important game information
+    """
     button_back_group = pygame.sprite.Group(
         ButtonBack('Назад', WindowParams.HEIGHT // 2 + 325, 200)
     )

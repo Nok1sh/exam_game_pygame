@@ -1,6 +1,6 @@
 import pygame
-from objects.world_objects.world_structures import Walls
-from structures_and_parameters.parameters_game import WindowParams, Textures
+from objects.world_objects.world_structures.walls import Walls
+from structures_and_parameters.parameters_game import WindowParams
 
 
 class WallOfRooms:

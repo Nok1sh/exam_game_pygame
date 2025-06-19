@@ -1,6 +1,8 @@
 import pygame
 from typing import Dict, List, Tuple
-from objects.world_objects.world_structures import Portal, PortalStand, Doors, Tent
+from objects.world_objects.world_structures.tent import Tent
+from objects.world_objects.world_structures.portal_and_stand import Portal, PortalStand
+from objects.world_objects.world_structures.doors import Doors
 from objects.ui.text import TextOnWindowForOptions
 from structures_and_parameters.parameters_game import WindowParams, ActionParams, Color
 from structures_and_parameters.environment.structures import get_structures
@@ -72,9 +74,6 @@ class Structures:
 
     @staticmethod
     def get_structures_on_level(number_level: int) -> Dict[int, pygame.sprite.Group]:
-        """
-        The offset on the sides of each barrel is 68
-        """
         return get_structures(number_level)
 
 

@@ -9,6 +9,9 @@ from objects.groups_objects import player_group, walls_group, add_magic_ball, ma
 
 
 def player_attack() -> None:
+    """
+    Generates the player's projectiles
+    """
     if (pygame.time.get_ticks() - ActionParams.DELAY_MAGIC_BALLS >= ActionParams.LAST_MAGIC_BALLS) and player.mana_pool > 0:
         add_magic_ball(player.line_move, player.rect.center)
         player.mana_pool -= 1
@@ -16,6 +19,9 @@ def player_attack() -> None:
 
 
 def update_game_state(current_room) -> int:
+    """
+    Updating the save settings and objects when the room changes
+    """
     if Rooms.FLAG_SWAP_LEVEL:
         walls_room = walls_group(Rooms.ROOM)
         GetEnemiesStructure.update_level()

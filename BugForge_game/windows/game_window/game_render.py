@@ -3,13 +3,16 @@ from objects.groups_objects import (player_render_group, magic_balls_hero, magic
                                     bars, text_score_money, walls_group, portal_stand)
 from structures_and_parameters.parameters_game import WindowParams
 from structures_and_parameters.environment.groups_of_enemies_model import GetEnemiesStructure
-from objects.world_objects.world_structures import Floor
+from objects.world_objects.world_structures.floor import Floor
 from objects.groups_objects import player, portal
 
 Floor.init(WindowParams.WIDTH, WindowParams.HEIGHT)
 
 
 def draw_game_scene(screen) -> None:
+    """
+    Drawing objects on the game screen
+    """
     Floor.draw(screen)
     if Rooms.TENT_STRUCTURE:
         Rooms.TENT_STRUCTURE.draw(screen)

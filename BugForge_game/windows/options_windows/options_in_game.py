@@ -1,15 +1,15 @@
 import pygame
-from structures_and_parameters.parameters_game import WindowParams, Color, ActionParams, Music
-from objects.ui.bars import HealthBar
+from structures_and_parameters.parameters_game import WindowParams, Color, Music
 from objects.ui.text import TextOnWindowForOptions
 from objects.ui.buttons import ButtonMenu, ButtonBack
 from objects.ui.volumeslider import VolumeSlider
-from objects.world_objects.world_structures import BackgroundOptions
-
-
+from objects.world_objects.background_options import BackgroundOptions
 
 
 def parameters_in_game() -> None:
+    """
+    Window with changing game parameters
+    """
     buttons_options_group = pygame.sprite.Group(
         ButtonMenu(f'Включить музыку', WindowParams.HEIGHT // 2 - 100, x=WindowParams.WIDTH // 2 - 180,
                    button_call=Music.run_music, width=300, height=75),
@@ -50,6 +50,9 @@ def parameters_in_game() -> None:
 
 
 def options_in_game() -> None:
+    """
+    Pause window
+    """
     continue_game: bool = False
     back_to_main_menu: bool = False
 

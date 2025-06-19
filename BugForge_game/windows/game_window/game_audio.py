@@ -4,6 +4,9 @@ from structures_and_parameters.parameters_rooms_and_structures import Rooms
 
 
 def handle_music() -> None:
+    """
+    Change the music depending on the situation
+    """
     if Rooms.CURRENT_ENEMIES and isinstance(list(Rooms.CURRENT_ENEMIES)[0], RangeBossEnemy):
         if not Music.FLAG_SWAP_MUSIC:
             Music.FLAG_SWAP_MUSIC = True

@@ -19,6 +19,9 @@ def pass_button():
 
 
 def main_menu_loop() -> None:
+    """
+    Main menu window
+    """
     buttons_main_menu_group.add(
         ButtonMenu('Новая игра', 150, button_call=main_game_loop, x=300),
         ButtonMenu('Продолжить', 300, button_call=continue_from_the_save, x=300),

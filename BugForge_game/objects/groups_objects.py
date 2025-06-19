@@ -3,7 +3,7 @@ from structures_and_parameters.environment.groups_of_enemies_model import GetEne
 from objects.action_objects.projectiles_direction.magic_balls import MagicBallPlayer
 from .action_objects.player_direction.player_model import Player
 from .action_objects.player_direction.player_render import PlayerRender
-from objects.world_objects.world_structures import Portal, PortalStand
+from objects.world_objects.world_structures.portal_and_stand import Portal, PortalStand
 from .ui.bars import MoneyBar, ManaBar, HealthBar
 from .ui.text import TextOnWindowForGame
 from structures_and_parameters.environment.rooms import room_number
